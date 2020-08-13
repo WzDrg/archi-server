@@ -1,0 +1,123 @@
+description: Archiving service
+date: 20200711
+context: Document Archiving
+softwareSystems:
+  "Document Archiving":
+    description: Provides long term storage of documents
+    containers:
+      "Quickfile UI":
+        description: User interface of the Quick File application
+        type: application
+        uses:
+          "Local disk storage":
+            type: Container
+          "ECS":
+            type: Container
+          "QF DB":
+            type: Container
+      "Quickfile API":
+        description: REST API to store documents
+        type: storage
+        uses:
+          "Local disk storage":
+           type: Container
+          "ECS":
+            type: Container
+          "QF DB":
+            type: Container
+      "Local disk storage":
+        description: Document storage using mounted disk volumes
+        type: storage
+      "QF DB":
+        description: Oracle database containing the Quickfile metadata
+        type: storage
+      "ECS":
+        description: Dell storage
+        type: storage
+      "Document Archiving Service":
+        description: Business service to archive documents
+        type: application
+        uses:
+          "Quickfile API":
+            type: Container
+      "index_borderellen.sh":
+        description: "Script to archive borderellen"
+        type: application
+        uses:
+          "QF DB":
+            type: Container
+          "Core Banking":
+            type: SoftwareSystem
+      "unicenter_launcher_autoindexer_flat_file.sh":
+        description: "Archiving script"
+        type: application
+        uses:
+          "Local disk storage":
+            type: Container
+          "QF DB":
+            type: Container
+      "MOVE_EMC_LBKVIR.sh":
+        description: "EMC Migration script"
+        type: application
+        uses:
+          "Local disk storage":
+            type: Container
+          "ECS":
+            type: Container
+          "QF DB":
+            type: Container
+      "MOVE_EMC_BORD_FIN.sh":
+        description: "EMC Migration script"
+        type: application
+        uses:
+          "Local disk storage":
+            type: Container
+          "ECS":
+            type: Container
+          "QF DB":
+            type: Container
+      "MOVE_EMC_BORD_ADM.sh":
+        description: "EMC Migration script"
+        type: application
+        uses:
+          "Local disk storage":
+            type: Container
+          "ECS":
+            type: Container
+          "QF DB":
+            type: Container
+      "MOVE_EMC_FLATFILE.sh":
+        description: "EMC Migration script"
+        type: application
+        uses:
+          "Local disk storage":
+            type: Container
+          "ECS":
+            type: Container
+          "QF DB":
+            type: Container
+      "MOVE_EMC_LISTING.sh":
+        description: "EMC Migration script"
+        type: application
+        uses:
+          "Local disk storage":
+            type: Container
+          "ECS":
+            type: Container
+          "QF DB":
+            type: Container
+  "Core Banking":
+    description: Core banking services
+environments:
+  ACC:
+    servers:
+      HN306:
+        containers:
+          "Quickfile API":
+            container: "Quickfile API"
+  EXP:
+    servers:
+      HN206:
+        containers:
+          "Quickfile API":
+            container: "Quickfile API"

@@ -1,0 +1,178 @@
+description: Definition of the java installation on the documentum servers
+date: 20200629
+context: Document Management
+environments:
+  ACC:
+    servers:
+      hn588:
+        description: Documentum frontend application server 1
+        containers:
+          JRE-1.6.0.27:
+            location: C:\\Program Files\\Java\\jre6\\bin\\
+          JDK-1.6.0.27:
+            location: C:\\Program Files\\Java\\jdk1.6.0_27\\jre\\bin\\      
+          JDK-1.8.0.161:
+            location: C:\\Program Files\\Java\\jdk1.8.0_161\\bin\\
+          JRE-1.8.0.191:
+            location: C:\\Program Files\\Java\\jre1.8.0_191\\bin\\
+          JRE-1.7.0.79-DCTM:
+            location: D:\\Dctm Software 7.2\\jre7u79-x64\\bin\\
+          JRE-1.6.0.27-DCTM:
+            location:	D:\\Dctm Software\\jre6\\bin\\
+      hn1053:
+        description: Documentum frontend application server 2
+        containers:
+          JRE-1.6.0.27:
+            location: C:\\Program Files\\Java\\jre6\\bin\\ 
+          JDK-1.6.0.27:
+            location: C:\\Program Files\\Java\\jdk1.6.0_27\\jre\\bin    
+          JDK-1.8.0.161:
+            location: C:\\Program Files\\Java\\jdk1.8.0_161\\bin\\      
+          JRE-1.8.0.161:
+            location: C:\\Program Files\\Java\\jre1.8.0_161\\bin      
+          JRE-1.7.0.79-DCTM:
+            location: D:\\Dctm Software 7.2\\jre7u79-x64\\bin\\
+          JRE-1.6.0.27-DCTM:
+            location: D:\\Dctm Software\\jre6\\bin\\                        
+      hn1054:
+        description: Documentum frontend application server 3
+        containers:
+          JRE-1.6.0.27:
+            location: C:\\Program Files\\Java\\jre6\\bin            
+          JDK-1.6.0.27:
+            location: C:\\Program Files\\Java\\jdk1.6.0_27\\jre\\bin     
+          JRE-1.8.0.161:
+            locaiton: C:\\Program Files\\Java\\jre1.8.0_161\\bin          
+          JDK-1.8.0.161:
+            location: C:\\Program Files\\Java\\jdk1.8.0_161\\jre\\bin    
+          JRE-1.7.0.79-DCTM:
+            location: D:\\Dctm Software 7.2\\jre7u79-x64\\bin\\       
+          JRE-1.6.0.27-DCTM:
+            location: D:\\Dctm Software\\jre6\\bin\\                     
+      hn1055:
+        description: Documentum frontend application server 4
+        containers: 
+          JRE-1.8.0.161:
+            location: C:\\Program Files\\Java\\jre1.8.0_161\\bin          
+          JDK-1.8.0.161:
+            location: C:\\Program Files\\Java\\jdk1.8.0_161\\jre\\bin    
+          JRE-1.7.0.79-DCTM:
+            location: D:\\Dctm Software 7.2\\jre7u79-x64\\bin\\       
+          JRE-1.6.0.27-DCTM:
+            location: D:\\Dctm Software\\jre6\\bin\\                     
+      hn1056:
+        description: Documentum frontend application server 5
+        containers:
+          JRE-1.8.0.161:
+            location: C:\\Program Files\\Java\\jre1.8.0_161\\bin          
+          JDK-1.8.0.161:
+            location: C:\\Program Files\\Java\\jdk1.8.0_161\\jre\\bin    
+          JRE-1.7.0.79-DCTM:
+            location: D:\\Dctm Software 7.2\\jre7u79-x64\\bin\\       
+          JRE-1.6.0.27-DCTM:
+            location: D:\\Dctm Software\\jre6\\bin\\                     
+      hn1596:
+        description: Documentum frontend application server 6
+        containers:
+          JRE-1.8.0.161:
+            location: C:\\Program Files\\Java\\jre1.8.0_161\\bin          
+          JDK-1.8.0.161:
+            location: C:\\Program Files\\Java\\jdk1.8.0_161\\jre\\bin    
+          JRE-1.7.0.79-DCTM:
+            location: D:\\Dctm Software 7.2\\jre7u79-x64\\bin\\       
+          JRE-1.6.0.27-DCTM:
+            location: D:\\Dctm Software\\jre6\\bin\\                     
+      hn1057:
+        description: Documentum backend BPS application server 1
+        containers:
+          JRE-1.8.0.161:
+            location:	C:\\Program Files\\Java\\jre1.8.0_161\\bin\\  
+          JDK-1.8.0.161:
+            location: C:\\Program Files\\Java\\jdk1.8.0_161\\jre\\bin\\     
+          JRE-1.7.0.79-DCTM:
+            location: D:\\Dctm Software 7.2\\jre7u79-x64\\bin\\    
+          JRE-1.6.0.27-DCTM:
+            location: D:\\Dctm Software\\jre6\\bin
+  EXP:
+    servers:
+      hn608:
+        description: Documentum frontend application server 1
+        containers:
+          JRE-1.6.0.27:
+            location: C:\\Program Files\\Java\\jre6\\bin\\
+          JDK-1.6.0.27:
+            location: C:\\Program Files\\Java\\jdk1.6.0_27\\
+          JDK-1.8.0.161:
+            location:	C:\\Program Files\\Java\\jdk1.8.0_161\\bin\\
+          JRE-1.8.0.191:
+            location: C:\\Program Files\\Java\\jre1.8.0_191\\bin\\
+          JRE-1.7.0.79-DCTM:
+            location: D:\\Dctm Software 7.2\\jre7u79-x64\\bin\\
+          JRE-1.6.0.27-DCTM:
+            location: D:\\Dctm Software\\jre6\\bin\\
+      hn0609:
+        description: Documentum frontend application server 2
+        containers:
+          JDK-1.8.0.161:
+            location: C:\\Program Files\\Java\\jdk1.8.0_161\\bin\\       
+          JRE-1.8.0.161:
+            location: C:\\Program Files\\Java\\jre1.8.0_161\\bin     
+          JRE-1.7.0.79-DCTM:
+            location: D:\\Dctm Software 7.2\\jre7u79-x64\\bin  
+          JRE-1.6.0.27-DCTM:
+            location: D:\\Dctm Software\\jre6\\bin
+      hn0612:
+        description: Documentum frontend application server 3
+        containers:
+          JRE-1.8.0.161:
+            location: C:\\Program Files\\Java\\jre1.8.0_161\\bin          
+          JDK-1.8.0.161:
+            location: C:\\Program Files\\Java\\jdk1.8.0_161\\jre\\bin    
+          JRE-1.7.0.79-DCTM:
+            location: D:\\Dctm Software 7.2\\jre7u79-x64\\bin\\       
+          JRE-1.6.0.27-DCTM:
+            location: D:\\Dctm Software\\jre6\\bin\\                     
+      hn0613:
+        description: Documentum frontend application server 4
+        containers:
+          JRE-1.8.0.161:
+            location: C:\\Program Files\\Java\\jre1.8.0_161\\bin          
+          JDK-1.8.0.161:
+            location: C:\\Program Files\\Java\\jdk1.8.0_161\\jre\\bin    
+          JRE-1.7.0.79-DCTM:
+            location: D:\\Dctm Software 7.2\\jre7u79-x64\\bin\\       
+          JRE-1.6.0.27-DCTM:
+            location: D:\\Dctm Software\\jre6\\bin\\                     
+      hn1618:
+        description: Documentum frontend application server 5
+        containers:
+          JDK-1.8.0.161:
+            location: C:\\Program Files\\Java\\jdk1.8.0_161\\bin\\       
+          JRE-1.8.0.161:
+            location: C:\\Program Files\\Java\\jre1.8.0_161\\bin     
+          JRE-1.7.0.79-DCTM:
+            location: D:\\Dctm Software 7.2\\jre7u79-x64\\bin  
+          JRE-1.6.0.27-DCTM:
+            location: D:\\Dctm Software\\jre6\\bin
+      hn1619:
+        description: Documentum frontend application server 6
+        containers:
+          JDK-1.6.0.31:
+            location: C:\\jdk1.6.0_31\\bin\\ 
+          JDK-1.8.0.161:
+            location: C:\\Program Files\\Java\\jdk1.8.0_161\\bin\\       
+          JRE-1.8.0.161:
+            location: C:\\Program Files\\Java\\jre1.8.0_161\\bin     
+          JRE-1.7.0.79-DCTM:
+            location: D:\\Dctm Software 7.2\\jre7u79-x64\\bin  
+          JRE-1.6.0.27-DCTM:
+            location: D:\\Dctm Software\\jre6\\bin
+      hn0614:
+        description: Documentum backend BPS application server 1
+        containers:
+          JRE-1.8.0.161:
+            location: C:\\Program Files\\Java\\jre1.8.0_161\\bin\\  
+          JDK-1.8.0.161:
+            location: C:\\Program Files\\Java\\jdk1.8.0_161\\jre\\bin\\     
+          JRE-1.7.0.79-DCTM:
+            location: D:\\Dctm Software 7.2\\jre7u79-x64\\bin\\    

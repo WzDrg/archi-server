@@ -1,0 +1,41 @@
+description: Full description of the document capture product
+date: 20200714
+context: Document Capture
+softwareSystems:
+  "Document Capture":
+    description: Product Capture offers a service to classify electronic documents |>
+      according the types defined within the Crelan context. Documents may be |>
+      classified based on a barcode provide on the document or on a cover page. |>
+      Metadata corresponding to the document type can be extracted from the document |>
+      through recognition or by means of a barcode. |>
+      Currently the product delivers the document to its destination (document |>
+      management or document archive). In the future, the software system will only |>
+      notify that a document of a given type is available.
+    containers:
+      "KTA Designer":
+        description: ""
+        type: application
+      "KTA Forms":
+        description: ""
+        type: application
+      "KTA License server":
+        description: ""
+        type: application
+      "Archive Documents":
+        description: "Script to archive documents that were exported."
+        type: application
+        uses:
+          "Document Archiving Service":
+            type: Container
+      "KTA Core Services":
+        description: ""
+        type: application
+      "KFS Import Services":
+        description: ""
+        type: application
+      "Local File Storage":
+        description: ""
+        type: storage
+        uses:
+          "Unknown":
+            type: Container

@@ -1,0 +1,35 @@
+context: Document Signature
+date: 20200806
+softwareSystems:
+  "Document Archiving":
+    containers:
+      "Document Archiving Service":
+        type: application
+        uses:
+          "Document Type Service":
+            type: Container
+  "Document Type":
+    description: Software system maintaining a catalogue of all document types |>
+      within the DASA domain. The service defines the metadata of each of the |>
+      document types to ensure a consistent definition across all services.
+    containers:
+      "Document Type Service":
+        description: Business service to retrieve document types.
+        type: application
+        uses:
+          "Document Type Storage":
+            type: Container
+      "Document Type Storage":
+        description: Dedicated storage containing the document types.
+        type: storage
+  "Document Signature":
+    description: Software system to provide the ability to digitally sign documents. |>
+      The documents are packaged and send to the connective signing portal.
+    containers:
+      "Document Signing Service":
+        description: Business service providing the functionalities to create a |>
+          a package of documents and digitally sign the documents.
+        type: application
+        uses:
+          "Document Type Service":
+            type: Container

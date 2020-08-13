@@ -1,0 +1,407 @@
+description: Design target environment document generation
+date: 20200630
+context: Document Generation
+softwareSystems:
+  "Document Generation":
+    description: Generate Crelan predefined documents
+    containers:
+      "EngageOne Designer":
+        description: Provides the application to design and manage templates.
+        type: application
+        uses:
+          "EngageOne Server":
+            type: Container
+      "EngageOne Server":
+        description: Manage and version templates within multiple repositories.
+        type: application
+        uses:
+          "EngageOne Designer Repository":
+            type: Container
+          "EngageOne Compose":
+            type: Container
+      "EngageOne Designer Repository":
+        description: 
+        type: storage
+      "EngageOne Content Repository":
+        description:
+        type: storage
+      "EngageOne Compose":
+        description: COTS application of Pitney Bowls to generate documents from predefined publications.
+        type: application
+        uses:
+          "EngageOne Content Repository":
+            type: Container
+      "docgen-ws":
+        description: Exposes batch document generation services.
+        type: application
+        uses:
+          "EngageOne Compose":
+            type: Container
+          "docgen-repository":
+            type: Container
+      "docgen-repository":
+        description: Dedicated storage for the docgen service.
+        type: storage
+      "docgen-batch":
+        description: Provides a script based access to generate a batch of documents.
+        type: application
+        uses:
+          "EngageOne Compose":
+            type: Container
+          "docgen-repository":
+            type: Container
+  "Cadis":
+    description: Credit backend application
+    uses:
+      "docgen-ws":
+        type: Container
+environments:
+  TST:
+    servers:
+      hn1707:
+        description: Engage One Designer Server used to design the new templates
+        os: WIN 2016
+        tier: 2
+        datacenter: Geleen
+        containers:
+          "JRE 1.8.0_221":
+            location: c:\\Program Files\\Java\\jre1.8.0_221            
+          "Designer Repository":
+            location: e:\\msqldata
+            type: storage
+            uses:
+              "hn1707_MSSQL Express":
+                type: ContainerInstance
+          "MSSQL Express":
+            type: application
+            description: MS SQL Express Server
+          "EngageOne Server":
+            type: application
+            container: "EngageOne Server"
+            uses:
+              "hn1707_MSSQL Express":
+                type: ContainerInstance
+              "hn1708_EngageOne Compose":
+                type: ContainerInstance
+          "EngageOne Designer":
+            type: application
+            container: "EngageOne Designer"
+            uses:
+                "hn1707_EngageOne Server"
+      hn0043:
+        description: EngageOne Server Scheduled
+        os: WIN 2008 R2
+        tier: 2
+        cpu: 4
+        memory: 32GB
+        containers:
+          EngageOne Compose:
+            container: EngageOne Compose              
+            uses:
+              hn0043_JBoss:
+                type: ContainerInstance
+              hn482_engage1T:
+                type: ContainerInstance
+          JBoss:
+            location: c:\\jboss-5.1.0.GA
+            uses:
+              "hn0043_JDK 1.6.0_34":
+                container: ContainerInstance
+          "JDK 1.6.0_26":
+            location: c:\\Program Files\\jdk1.6.0_26
+          "JDK 1.6.0_34":
+            location: c:\\Program Files\\jdk1.6.0_34
+          "JRE 1.6.0_34":
+            location: c:\\Program Files\\jre6
+          "JRE 1.8.0_20":
+            location: c:\\Program Files\\jre8
+      hn1708:
+        description: Engage one Composer Server
+        os: WIN 2016
+        tier: 2
+        datacenter: Geleen
+        containers:
+          "EngageOne Compose":
+            container: "EngageOne Compose"
+            uses:
+              hn1708_Tomcat:
+                type: ContainerInstance
+              "hn482_Oracle DBMS":
+                type: ContainerInstance
+          Tomcat:
+            technology: Tomcat
+            uses:
+              "hn1708_JDK 11.0.5":
+                type: ContainerInstance
+          "JDK 11.0.5":
+            location: c:\\Program Files\\Java\\jdk-11.0.5
+            technology: Java  
+      hn482:
+        description: Oracle cluster test
+        containers:
+          "Oracle DBMS":
+            technology: Oracle DB
+          engage1t:
+            container: EngageOne Content Repository
+            uses:
+              "hn482_Oracle DBMS":
+                type: ContainerInstance
+      hn5602:
+        description: JBoss Server Test
+        container:
+          "JBoss Reporting":
+            technology: JBoss AS
+          docgen-ws:
+            container: "docgen-ws"
+            uses:
+              "hn5602_JBoss Reporting":
+                type: ContainerInstance"
+              "hn032_EngageOne Compose":
+                type: ContainerInstance
+  ACC:
+    servers:
+      hn0270:
+        description: EngageOne Batch Server
+        os: WIN 2008 R2
+        tier: 2
+        datacenter: Geleen
+        cpu: 8
+        memory: 32GB
+        containers:
+          "EngageOne Compose":
+            container: EngageOne Compose
+            uses:
+              hn0270_JBoss:
+                type: ContainerInstance
+              hn492_engage1a:
+                type: ContainerInstance
+          JBoss:
+            location: c:\\jboss-5.1.0.GA
+            technology: JBoss AS
+            uses:
+              "hn0270_JDK 1.6.0_34":
+                type: ContainerInstance
+          "JDK 1.6.0_34":
+            location: c:\\Program Files\\Java\\jdk1.6.0_34
+            technology: JDK
+          "JRE 1.6.0_34":
+            location: c:\\Program Files\\Java\\jre6
+            technology: JRE
+          "JRE 1.8.0_141":
+            location: c:\\Program Files\\Java\\jre8
+            technology: JRE
+      hn032:
+        description: Engage One On Demand Server. Zelfde omgeving voor TST en ACC.
+        os: WIN 2008 R2
+        tier: 2
+        datacenter: Geleen
+        cpu: 4
+        memory: 32GB
+        containers:
+          "EngageOne Compose":
+            container: EngageOne Compose
+            uses:
+              "hn032_JBoss":
+                type: ContainerInstance
+              "hn492_engage1a":
+                type: containerInstance
+          JBoss:
+            location: c:\\jboss-5.1.0.GA
+            technology: JBoss AS
+            uses:
+              "hn032_JDK 1.6.0_22":
+                type: ContainerInstance
+          "JDK 1.6.0_21":
+            location: c:\\Java\\jdk1.6.0_21
+            technology: JDK
+          "JDK 1.6.0_22":
+            location: c:\\Java\\jdk1.6.0_22
+            technology: JDK
+          "JRE 1.8.0_45":
+            location: c:\\Java\\jre1.8.0_45
+            technology: JRE
+      hn1711:
+        description: Engage One Application Server (Scheduled)
+        os: WIN 2016
+        tier: 2
+        datacenter: Geleen
+        cpu: 4
+        memory: 32GB
+        containers:
+          "JDK 11.0.5":
+            location: c:\\Program Files\\Java\\jdk-11.0.5
+            technology: JDK
+          "JRE 1.8.0.221":
+            location: c:\\Program Files\\Java\\jre1.8.0_221
+            technology: JRE
+          Tomcat:
+            technology: Tomcat AS
+            uses:
+              "hn1711_JDK 11.0.5":
+                type: ContainerInstance
+          "EngageOne Compose":
+            container: EngageOne Compose
+            uses:
+              hn1711_Tomcat:
+                type: ContainerInstance
+              hn492_engage1a:
+                type: ContainerInstance
+      hn492:
+        description: Oracle cluster test
+        containers:
+          "Oracle DBMS":
+            technology: Oracle DB
+          engage1a:
+            container: EngageOne Content Repository
+            uses:
+              "hn492_Oracle DBMS":
+                type: ContainerInstance
+      hn5782:
+        description: JBoss Reporting Server
+        containers:
+          "JBoss Reporting":
+            technology: JBoss AS
+          docgen-ws:
+            container: "docgen-ws"
+            uses:
+              "hn5782_JBoss Reporting":
+                type: ContainerInstance
+              "hn032_EngageOne Compose":
+                type: ContainerInstance
+      hn5783:
+        description: JBoss Reporting Server
+        containers:
+          "JBoss Reporting":
+            technology: JBoss AS
+          docgen-ws:
+            container: "docgen-ws"
+            uses:
+              "hn5783_JBoss Reporting":
+                type: ContainerInstance
+              "hn032_EngageOne Compose":
+                type: ContainerInstance
+  EXP:
+    servers:
+      hn0450:
+        description: EngageOne Batch Server
+        os: WIN 2008 R2
+        tier: 1
+        cpu: 8
+        memory: 32GB
+        containers:
+          "EngageOne Compose":
+            container: EngageOne Compose
+            uses:
+              "hn0450_JBoss":
+                type: ContainerInstance
+              "hn512_engage1":
+                type: containerInstance
+          JBoss:
+            location: c:\\jboss-5.1.0.GA
+            technology: JBoss AS
+            uses:
+              "hn0450_JDK 1.6.0_34":
+                type: ContainerInstance
+          "JDK 1.6.0_34":
+            location: c:\\Program Files\\Java\\jdk1.6.0_34
+            technology: JDK
+          "JRE 1.6.0_34":
+            location: c:\\Program Files\\Java\\jre6
+            technology: JRE
+          "JRE 1.8.0_141":
+            location: c:\\Program Files\\Java\\jre8
+            technology: JRE
+      hn071:
+        description: Engage One On Demand Server
+        comment: Almost no load on the server.
+        os: WIN 2008 R2
+        tier: 1
+        cpu: 8
+        memory: 32GB
+        containers:
+          "EngageOne Compose":
+            container: EngageOne Compose
+            uses:
+              "hn071_JBoss":
+                type: ContainerInstance
+              "hn512_engage1":
+                type: containerInstance
+          JBoss:
+            location: c:\\jboss-5.1.0.GA
+            technology: JBoss AS
+            uses:
+              "hn071_JDK 1.6.0_45":
+                type: ContainerInstance
+          "JDK 1.6.0_45":
+            location: c:\\Java\\jdk1.6.0_34
+            technology: JDK
+          "JRE 1.6.0_45":
+            location: c:\\Java\\jre6
+            technology: JRE
+      hn1716:
+        description: Engage One Application Server (Batch)
+        os: WIN 2016
+        tier: 1
+        cpu: 8
+        memory: 32GB
+        containers:
+          "JDK 11.0.5":
+            location: c:\\Program Files\\Java\\jdk-11.0.5
+            technology: JDK
+          "JRE 1.8.0.221":
+            location: c:\\Program Files\\Java\\jre1.8.0_221
+            technology: JRE
+          Tomcat:
+            technology: Tomcat AS
+            uses:
+              "hn1716_JDK 11.0.5":
+                type: ContainerInstance
+          "EngageOne Compose":
+            container: EngageOne Compose
+            uses:
+              hn1716_Tomcat:
+                type: ContainerInstance
+              hn512_engage1:
+                type: ContainerInstance
+      hn051:
+        description: Doc1 Server
+        comment: To be decomissioned
+        os: WIN 2003
+        tier: 1
+        cpu: 1
+        memory: 2GB
+      hn512:
+        description: Oracle cluster test
+        containers:
+          "Oracle DBMS":
+            technology: Oracle DB
+          engage1:
+            container: EngageOne Content Repository
+            uses:
+              "hn512_Oracle DBMS":
+                type: ContainerInstance
+      hn5784:
+        description: JBoss Reporting Server
+        containers:
+          "JBoss Reporting":
+            technology: JBoss AS
+          docgen-ws:
+            container: "docgen-ws"
+            uses:
+              "hn5784_JBoss Reporting":
+                type: ContainerInstance
+              "hn071_EngageOne Compose":
+                type: ContainerInstance
+      hn5785:
+        description: JBoss Reporting Server
+        containers:
+          "JBoss Reporting":
+            technology: JBoss AS
+          docgen-ws:
+            container: "docgen-ws"
+            uses:
+              "hn5785_JBoss Reporting":
+                type: ContainerInstance
+              "hn071_EngageOne Compose":
+                type: ContainerInstance
+                

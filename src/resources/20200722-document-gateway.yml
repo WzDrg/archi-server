@@ -1,0 +1,282 @@
+description: Full description of the document gateway
+date: 20200722
+context: Document Gateway
+softwareSystems:
+    "Document Gateway":
+        description: Transfer documents between systems
+        containers:
+            DocumentGenerationService:
+                type: application
+                uses:
+                    "Document Generation":
+                        type: SoftwareSystem
+            DocumentManagementService:
+                type: application
+                uses:
+                    "Archive Handler WS":
+                        type: Container
+            DBRateInterface:
+                type: application
+            GuarantyService:
+                type: application
+            "Archive Handler WS":
+                type: application
+                uses:
+                    Cadis:
+                        type: SoftwareSystem
+                    "Document Management":
+                        type: SoftwareSystem
+                    "Document Archiving":
+                        type: SoftwareSystem
+            "Archive Handler Batch":
+                type: application
+                uses:
+                    "Archive Handler WS":
+                        type: Container
+            ADM_BOR:
+                type: application
+                uses:
+                    "Archive Handler Batch":
+                        type: Container
+            ARC_CRS_FATCA:
+                type: application
+                uses:
+                    "Archive Handler Batch":
+                        type: Container
+            ATT_FIS:
+                type: application
+                uses:
+                    "Archive Handler Batch":
+                        type: Container
+            "LBK_WKDOC Folder":
+                type: storage
+            LBK_WKDOC:
+                type: application
+                uses:
+                    "LBK_WKDOC Folder":
+                        type: Container
+                    "Archive Handler Batch":
+                        type: Container
+            PDF_STATEMENT_ARCHIVE:
+                type: application
+                uses:
+                    "Archive Handler Batch":
+                        type: Container
+            REK_UIT:
+                type: application
+                uses:
+                    "Archive Handler Batch":
+                        type: Container
+    Cadis:
+        description: Credit application backend
+        uses:
+            "LBK_WKDOC Folder":
+                type: Container
+            "hn0043_LBK_WKDOC Folder":
+                type: ContainerInstance
+    MyCrelan:
+        description: Online application for customers
+        uses:
+            "Archive Handler WS":
+                type: Container
+environments:
+    DEV:
+        servers:
+            hn1230:
+                description: ESB/IBM Process Center
+                tier: 2
+                datacenter: Hasselt
+                os: SUSE 11
+            hn1231:
+                description: EBM/IBM Integration Bus
+                tier: 2
+                datacenter: Hasselt
+                os: SUSE 11
+                containers: 
+                    IIB:
+                        description: IBM Integration Bus
+                        technology: ESB
+            hn1232:
+                description: ESB/IBM Business Monitor
+                tier: 2
+                datacenter: Hasselt
+                os: SUSE 11
+    TST:
+        servers:
+            hn0043:
+                containers:
+                    "LBK_WKDOC Folder":
+                        container: LBK_WKDOC Folder
+                    LBK_WKDOC:
+                        container: LBK_WKDOC
+                        uses:
+                            "hn0043_LBK_WKDOC Folder":
+                                type: ContainerInstance
+                            "hn0043_Archive Handler Batch":
+                                type: ContainerInstance
+                    "Archive Handler Batch":
+                        container: "Archive Handler Batch"
+                        uses:
+                            hn5062_archivehandler-ws:
+                                type: ContainerInstance
+                            "hn0043_JRE 1.8.0_20" :
+                                type: ContainerInstance
+            hn5602:
+                description: JBoss Server Test
+                containers:
+                    "JBoss Reporting":
+                        technology: JBoss AS
+                    archivehandler-ws:
+                        container: "Archive Handler WS"
+                        uses:
+                        "hn5602_JBoss Reporting":
+                            type: ContainerInstance"
+                        "Document Management":
+                            type: SoftwareSystem
+            hn482:
+                description: Oracle server test
+                containers:
+                    LBKST:
+                        description: Dedicated repository for the archive handler
+                        uses:
+                            hn482_Oracle:
+                                type: ContainerInstance
+            hn1233:
+                description: IBM ESB Integration bus
+                tier: 2
+                os: SUSE 11
+                cpu: 2
+                memory: 6 GB
+                containers:
+                    IIB:
+                        description: IBM Integration Bus
+                        technology: ESB
+                    DBRateInterface:
+                        container: DBRateInterface
+                        uses:
+                            hn1233_IIB:
+                                type: ContainerInstance
+                    DocumentGenerationService:
+                        container: DocumentGenerationService
+                        uses:
+                            hn1233_IIB:
+                                type: ContainerInstance
+                    DocumentManagementService:
+                        container: DocumentManagementService
+                        uses:
+                            hn1233_IIB:
+                                type: ContainerInstance
+                    GuarantyService:
+                        container: GuarantyService
+                        uses:
+                            hn1233_IIB:
+                                type: ContainerInstance
+    ACC:
+        servers:
+            hn1234:
+                description: ESB/IBM Integration Bus
+                containers:
+                    IIB:
+                        description: IBM Integration Bus
+                        technology: ESB
+                    DBRateInterface:
+                        container: DBRateInterface
+                        uses:
+                            hn1234_IIB:
+                                type: ContainerInstance
+                    DocumentGenerationService:
+                        container: DocumentGenerationService
+                        uses:
+                            hn1234_IIB:
+                                type: ContainerInstance
+                    DocumentManagementService:
+                        container: DocumentManagementService
+                        uses:
+                            hn1234_IIB:
+                                type: ContainerInstance
+                    GuarantyService:
+                        container: GuarantyService
+                        uses:
+                            hn1234_IIB:
+                                type: ContainerInstance
+            hn1235:
+                description: ESB/IBM Integration Bus
+                containers:
+                    IIB:
+                        description: IBM Integration Bus
+                        technology: ESB
+                    DBRateInterface:
+                        container: DBRateInterface
+                        uses:
+                            hn1235_IIB:
+                                type: ContainerInstance
+                    DocumentGenerationService:
+                        container: DocumentGenerationService
+                        uses:
+                            hn1235_IIB:
+                                type: ContainerInstance
+                    DocumentManagementService:
+                        container: DocumentManagementService
+                        uses:
+                            hn1235_IIB:
+                                type: ContainerInstance
+                    GuarantyService:
+                        container: GuarantyService
+                        uses:
+                            hn1235_IIB:
+                                type: ContainerInstance
+    EXP:
+        servers:
+            hn1238:
+                description: ESB/IBM Integration Bus
+                containers:
+                    IIB:
+                        description: IBM Integration Bus
+                        technology: ESB
+                    DBRateInterface:
+                        container: DBRateInterface
+                        uses:
+                            hn1238_IIB:
+                                type: ContainerInstance
+                    DocumentGenerationService:
+                        container: DocumentGenerationService
+                        uses:
+                            hn1238_IIB:
+                                type: ContainerInstance
+                    DocumentManagementService:
+                        container: DocumentManagementService
+                        uses:
+                            hn1238_IIB:
+                                type: ContainerInstance
+                    GuarantyService:
+                        container: GuarantyService
+                        uses:
+                            hn1238_IIB:
+                                type: ContainerInstance
+            hn1239:
+                description: ESB/IBM Integration Bus      
+                containers:
+                    IIB:
+                        description: IBM Integration Bus
+                        technology: ESB
+                    DBRateInterface:
+                        container: DBRateInterface
+                        uses:
+                            hn1239_IIB:
+                                type: ContainerInstance
+                    DocumentGenerationService:
+                        container: DocumentGenerationService
+                        uses:
+                            hn1239_IIB:
+                                type: ContainerInstance
+                    DocumentManagementService:
+                        container: DocumentManagementService
+                        uses:
+                            hn1239_IIB:
+                                type: ContainerInstance
+                    GuarantyService:
+                        container: GuarantyService
+                        uses:
+                            hn1239_IIB:
+                                type: ContainerInstance
+   
