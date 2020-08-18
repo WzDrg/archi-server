@@ -5,6 +5,8 @@ import typeDefs from "./TypeDefs";
 import cors from "cors";
 import { getSoftwareSystems, getSoftwareSystemUses } from "./types/SoftwareSystem";
 import { getContainersOfSoftwareSystem, getContainerUses } from "./types/Container";
+import { getEnvironments } from "./types/Environment";
+import { serversOfEnvironment } from "./types/Server";
 
 export interface ServerConfiguration {
   playground: boolean;
@@ -17,6 +19,7 @@ export const startServer = async (config: ServerConfiguration, services: Service
     resolvers: {
       Query: {
         softwareSystems: (_, __, { services }) => getSoftwareSystems(services)(),
+        environments: (_, __, { services }) => getEnvironments(services)()
       },
       SoftwareSystem: {
         containers: (parent, _, { services }) => getContainersOfSoftwareSystem(services)(parent.name),
@@ -24,6 +27,9 @@ export const startServer = async (config: ServerConfiguration, services: Service
       },
       Container: {
         uses: (parent, _, { services }) => getContainerUses(services)(parent.name)
+      },
+      Environment: {
+        servers: (parent, _, { services }) => serversOfEnvironment(services)(parent.name)
       }
     },
     context: { services: services }

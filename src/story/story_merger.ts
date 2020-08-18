@@ -34,8 +34,8 @@ const fromContainerInstance = (server_name: string, name: string, container: Con
         : []];
 
 
-const fromServer = (name: string, server: Server): Command<any>[] =>
-    [mergeServer(name, server.description, server.os, server.tier, server.datacenter, server.cpu, server.memory),
+const fromServer = (environment: string, name: string, server: Server): Command<any>[] =>
+    [mergeServer(name, server.description, environment, server.os, server.tier, server.datacenter, server.cpu, server.memory),
     ...server.containers
         ? reduce([], (commands: Command<any>[], container_name: string) =>
             commands.concat(fromContainerInstance(name, container_name, server.containers[container_name])))
@@ -46,7 +46,7 @@ const fromServer = (name: string, server: Server): Command<any>[] =>
 const fromEnvironment = (name: string, environment: Environment): Command<any>[] =>
     environment.servers
         ? reduce([], (commands: Command<any>[], server_name: string) =>
-            commands.concat(fromServer(server_name, environment.servers[server_name])))
+            commands.concat(fromServer(name, server_name, environment.servers[server_name])))
             (Object.keys(environment.servers))
         : [];
 

@@ -1,5 +1,5 @@
 
-import { startServer, ServerConfiguration } from './graphql/server';
+import { startServer, ServerConfiguration } from './graphql/GraphQLServer';
 import { memoryEventStore } from './eventstore/memory_event_store';
 import { services } from './core/service';
 import { processStory, processStoriesOfFolder } from './story/story_merger';
