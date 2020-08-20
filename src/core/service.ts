@@ -2,10 +2,10 @@ import { pipe } from "fp-ts/lib/pipeable";
 import { none, Option, isSome, toNullable } from "fp-ts/lib/Option";
 import { reduce, map, filter } from "fp-ts/lib/Array";
 import { toArray } from "fp-ts/lib/Record";
-import { Command, Aggregate, AggregateType, Event } from "./types";
+import { Command, Aggregate, AggregateType, Event, AggregateId } from "./types";
 import { EventStore } from "./event_store";
 
-type GetAggregate = <T extends AggregateType>(type: T, id: string) => Option<Aggregate<T>>;
+type GetAggregate = <T extends AggregateType>(id: AggregateId<T>) => Option<Aggregate<T>>;
 type GetAggregates = <T extends AggregateType>(type: T) => Aggregate<T>[];
 type ExecuteCommand = <T extends AggregateType>(command: Command<T>) => Event<T>[];
 type ExecuteCommands = (commands: Command<any>[]) => Event<any>[];
@@ -23,9 +23,9 @@ const eventsToAggregate = <T extends AggregateType>(events: Event<T>[]) =>
 
 // Construct a single aggregate using the available events
 const getAggregate = (event_store: EventStore): GetAggregate =>
-    <T extends AggregateType>(type: T, id: string) =>
+    <T extends AggregateType>(id:AggregateId<T>) =>
         pipe(
-            event_store.get_events_of_aggregate(type, id),
+            event_store.get_events_of_aggregate(id.type, id.id),
             eventsToAggregate
         );
 
@@ -54,7 +54,7 @@ const getAggregates = (event_store: EventStore): GetAggregates =>
 const executeCommand = (event_store: EventStore): ExecuteCommand =>
     <T extends AggregateType>(command: Command<T>): Event<T>[] =>
         pipe(
-            getAggregate(event_store)(command.id.type, command.id.id),
+            getAggregate(event_store)(command.id),
             command,
             event_store.store_events
         );

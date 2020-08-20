@@ -13,4 +13,4 @@ const config: ServerConfiguration = {
   playground: true,
 }
 
-startServer(config, core_services);
+startServer(core_services);

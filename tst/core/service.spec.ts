@@ -1,8 +1,8 @@
 import { isSome } from "fp-ts/lib/Option";
-import { services } from "./service";
-import { memoryEventStore } from "../eventstore/memory_event_store";
-import { AggregateType } from "./types";
-import { createServer } from "./aggregates/server";
+import { services } from "../../src/core/service";
+import { memoryEventStore } from "../../src/eventstore/memory_event_store";
+import { AggregateType } from "../../src/core/types";
+import { createServer, serverId } from "../../src/core/aggregates/server";
 
 describe("execute_commands", () => {
     it("should store the events", () => {
@@ -18,7 +18,7 @@ describe("getAggregate", () => {
     it("should retrieve a single aggregate", () => {
         let _event_store = memoryEventStore();
         services(_event_store).execute_command(createServer("server", "description"));
-        const server = services(_event_store).get_aggregate(AggregateType.Server, "server");
+        const server = services(_event_store).get_aggregate(serverId("server"));
         expect(isSome(server)).toBeTruthy();
     });
 });

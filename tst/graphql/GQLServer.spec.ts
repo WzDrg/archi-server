@@ -1,5 +1,5 @@
-import { serversOfEnvironment } from "./Server";
-import { Server as CoreServer, serverId } from "../../core/aggregates/server";
+import { serversOfEnvironment } from "../../src/graphql/types/GQLServer";
+import { Server as CoreServer, serverId } from "../../src/core/aggregates/server";
 
 const mockServices = {
     execute_command: jest.fn(),

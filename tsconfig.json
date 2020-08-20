@@ -17,6 +17,6 @@
     "/node_modules/"
   ],
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts", "tst/graphql/GQLServer.spec.ts", "tst/graphql/GQLEnvironment.spec.ts", "tst/graphql/GQLContainerInstance.spec.ts", "tst/graphql/GQLContainer.spec.ts", "tst/eventstore/memory_event_store.spec.ts", "tst/core/types.spec.ts", "tst/core/software_system.spec.ts", "tst/core/server.spec.ts", "tst/core/container.spec.ts", "tst/core/container_instance.spec.ts", "tst/core/connection.spec.ts", "tst/core/connection_instance.spec.ts", "tst/core/actor.spec.ts", "tst/core/service.spec.ts", "tst/story/story_merger.spec.ts"
   ]
 }

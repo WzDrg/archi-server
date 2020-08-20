@@ -6,6 +6,8 @@ enum ItemType {
     SOFTWARESYSTEM
     CONTAINER
     COMPONENT
+    SERVER
+    CONTAINERINSTANCE
 }
 
 type Reference {
@@ -36,6 +38,7 @@ type ContainerInstance {
 }
 
 type Server {
+    id: String
     name: String
     containers: [ContainerInstance]
 }

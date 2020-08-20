@@ -1,6 +1,6 @@
-import { Story } from "./story";
-import { fromStory } from "./story_merger";
-import { AggregateType } from "../core/types";
+import { Story } from "../../src/story/story";
+import { fromStory } from "../../src/story/story_merger";
+import { AggregateType } from "../../src/core/types";
 
 describe("storiesToCommands", () => {
     it("should convert empty story", () => {

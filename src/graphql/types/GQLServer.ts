@@ -3,15 +3,17 @@ import { map, filter } from "fp-ts/lib/Array";
 
 import { Services } from "../../core/service";
 import { AggregateType } from "../../core/types";
-import { Server as CoreServer } from "../../core/aggregates/server";
+import { Server } from "../../core/aggregates/server";
 
 // Server returned by GraphQL queries
-export interface Server {
-    name: string
+export interface GQLServer {
+    id: string,
+    name: string,
 }
 
-const coreServerToServer = (coreServer: CoreServer): Server =>
+const coreServerToServer = (coreServer: Server): GQLServer =>
     ({
+        id: coreServer.id.id,
         name: coreServer.name
     });
 
@@ -20,6 +22,6 @@ export const serversOfEnvironment = (services: Services) =>
     (name: string) =>
         pipe(
             services.get_aggregates(AggregateType.Server),
-            filter((server: CoreServer) => name === (server.segment ?? "")),
+            filter((server: Server) => name === (server.segment ?? "")),
             map(coreServerToServer)
         )

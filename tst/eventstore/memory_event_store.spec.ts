@@ -1,7 +1,7 @@
 import { none } from "fp-ts/lib/Option"
-import { memoryEventStore } from "./memory_event_store";
-import { AggregateType } from "../core/types";
-import { createServer } from "../core/aggregates/server";
+import { memoryEventStore } from "../../src/eventstore/memory_event_store";
+import { AggregateType } from "../../src/core/types";
+import { createServer } from "../../src/core/aggregates/server";
 
 describe("get_events_of_aggregate_type", () => {
     it("should return empty array of events", () => {
