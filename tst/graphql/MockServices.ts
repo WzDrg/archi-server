@@ -13,23 +13,8 @@ export const createMockServices = (aggregates: Aggregate<any>[]) => {
     });
 }
 
-export const sv1: Server = {
-    id: serverId("sv1"),
-    name: "sv1",
-    description: "",
-    segment: "TST"
-}
-
-export const sv2: Server = {
-    id: serverId("sv2"),
-    name: "sv2",
-    description: "First server",
-    segment: "ACC"
-};
-
-export const sv3: Server = {
-    id: serverId("sv3"),
-    name: "sv3",
-    description: ""
-}
+export const server_tst: Server = { id: serverId("sv1"), name: "sv1", description: "", segment: "TST" }
+export const server_acc: Server = { id: serverId("sv2"), name: "sv2", description: "First server", segment: "ACC" };
+export const server_nosegment: Server = { id: serverId("sv3"), name: "sv3", description: "" }
+export const server2_tst: Server = { id: serverId("sv4"), name: "sv4", description: "", segment: "TST" }
 
