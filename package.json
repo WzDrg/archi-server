@@ -5,7 +5,7 @@
   "license": "MIT",
   "description": "\"How to build an Apollo GraphQL server with TypeScript and Webpack Hot Module Replacement\" Demo:\n\nhttps://medium.freecodecamp.org/build-an-apollo-graphql-server-with-typescript-and-webpack-hot-module-replacement-hmr-3c339d05184f",
   "scripts": {
-    "test": "npx jest --watchAll",
+    "test": "npx jest --runInBand --no-cache",
     "start": "node 'dist/index.js'",
     "build": "tsc -p . && ncp src/schema dist/schema",
     "start:dev": "npm run build:dev",

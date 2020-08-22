@@ -2,7 +2,7 @@ import { createTestClient } from "apollo-server-testing";
 import gql from "graphql-tag";
 
 import { createApolloServer } from "../../src/graphql/GraphQLServer";
-import { createMockServices, server_tst, server_acc, server_nosegment, server2_tst } from "./MockServices";
+import { createMockServices, server_tst, server_acc, server_nosegment, server2_tst, cont_inst, cont_inst2 } from "./MockServices";
 
 describe("environments query", () => {
    it("should return an empty list when no servers are defined", async () => {
@@ -55,4 +55,33 @@ describe("environments query", () => {
       expect(response.data.environments[0].servers[0]).toHaveProperty("name", server_tst.name);
       expect(response.data.environments[0].servers[1]).toHaveProperty("name", server2_tst.name);
    });
+
+   it("should return a single server with no container instance", async () => {
+      const client = createTestClient(createApolloServer(createMockServices([server_tst])));
+      const response = await client.query({ query: gql`query {environments {name servers {name containers {name}}}}` });
+      expect(response.errors).toBeUndefined();
+      expect(response.data.environments).toHaveLength(1);
+      expect(response.data.environments[0].servers).toHaveLength(1);
+      expect(response.data.environments[0].servers[0].containers).toHaveLength(0);
+   });
+
+   it("should return a single server with a singe container instance", async () => {
+      const client = createTestClient(createApolloServer(createMockServices([server_tst, cont_inst])));
+      const response = await client.query({ query: gql`query {environments {name servers {name containers {name}}}}` });
+      expect(response.errors).toBeUndefined();
+      expect(response.data.environments).toHaveLength(1);
+      expect(response.data.environments[0].servers).toHaveLength(1);
+      expect(response.data.environments[0].servers[0].containers).toHaveLength(1);
+      expect(response.data.environments[0].servers[0].containers[0]).toHaveProperty("name", cont_inst.id.id);
+   });
+
+   it("should return a single server with two container instances", async () => {
+      const client = createTestClient(createApolloServer(createMockServices([server_tst, cont_inst, cont_inst2])));
+      const response = await client.query({ query: gql`query {environments {name servers {name containers {name}}}}` });
+      expect(response.errors).toBeUndefined();
+      expect(response.data.environments).toHaveLength(1);
+      expect(response.data.environments[0].servers).toHaveLength(1);
+      expect(response.data.environments[0].servers[0].containers).toHaveLength(2);
+   });
+
 });

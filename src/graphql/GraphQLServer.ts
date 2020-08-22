@@ -10,6 +10,7 @@ import { serversOfEnvironment } from "./types/GQLServer";
 import { getContainerInstancesOfServer } from "./types/GQLContainerInstance";
 import { serverId } from "../core/aggregates/server";
 import { containerInstanceId } from "../core/aggregates/container_instance";
+import { softwareSystemId } from "../core/aggregates/software_system";
 
 export interface ServerConfiguration {
   playground: boolean;
@@ -25,8 +26,8 @@ export const createApolloServer = (services: Services) => {
         environments: (_, __, { services }) => getEnvironments(services)()
       },
       SoftwareSystem: {
-        containers: (parent, _, { services }) => getContainersOfSoftwareSystem(services)(parent.name),
-        uses: (parent, _, { services }) => getSoftwareSystemUses(services)(parent.name)
+        containers: (parent, _, { services }) => getContainersOfSoftwareSystem(services)(softwareSystemId(parent.id)),
+        uses: (parent, _, { services }) => getSoftwareSystemUses(services)(parent.id)
       },
       Container: {
         uses: (parent, _, { services }) => getUsesOfContainer(services)(parent.name)

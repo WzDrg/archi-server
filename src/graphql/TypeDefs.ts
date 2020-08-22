@@ -21,12 +21,14 @@ type Query {
 }
 
 type SoftwareSystem {
+    id: String
     name: String
     containers: [Container]
     uses: [Reference]
 }
 
 type Container {
+    id: String
     name: String
     uses: [Reference]
 }
