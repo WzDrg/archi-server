@@ -1,13 +1,13 @@
 import { pipe } from "fp-ts/lib/pipeable";
-import { filter, map, chainFirst } from "fp-ts/lib/Array";
+import { filter, map } from "fp-ts/lib/Array";
 import { fromNullable, map as mapOption, chain as chainOption, toNullable } from "fp-ts/lib/Option";
 
-import { AggregateType, eqAggregateId, AggregateId } from "../../core/types";
-import { Container, containerId } from "../../core/aggregates/container";
-import { Services } from "../../core/service";
-import { Connection } from "../../core/aggregates/connection";
+import { AggregateType, eqAggregateId, AggregateId } from "../../repository/types";
+import { Container, containerId } from "../../repository/aggregates/container";
+import { Repository } from "../../repository/service";
+import { Connection } from "../../repository/aggregates/connection";
 import { aggregateIdToReference } from "./Reference";
-import { ContainerInstance } from "../../core/aggregates/container_instance";
+import { ContainerInstance } from "../../repository/aggregates/container_instance";
 
 
 const toGQLContainer = (container: Container) =>
@@ -20,14 +20,14 @@ const isContainerOfSoftwareSystem = (softwareSystemId: AggregateId<AggregateType
     (container: Container) =>
         eqAggregateId(container.software_system, softwareSystemId);
 
-export const getAllContainers = (services: Services) =>
+export const getAllContainers = (services: Repository) =>
     () =>
         pipe(
             services.get_aggregates(AggregateType.Container),
             map(toGQLContainer)
         );
 
-export const getContainersOfSoftwareSystem = (services: Services) =>
+export const getContainersOfSoftwareSystem = (services: Repository) =>
     (softwareSystemId: AggregateId<AggregateType.SoftwareSystem>) =>
         pipe(
             services.get_aggregates(AggregateType.Container),
@@ -35,14 +35,13 @@ export const getContainersOfSoftwareSystem = (services: Services) =>
             map(toGQLContainer)
         );
 
-export const getContainerOfContainerInstance = (services: Services) =>
+export const getContainerOfContainerInstance = (services: Repository) =>
     (container_instance_id: AggregateId<AggregateType.ContainerInstance>) =>
         pipe(
             services.get_aggregate(container_instance_id),
             chainOption((containerInstance: ContainerInstance) => fromNullable(containerInstance.container_id)),
             chainOption(services.get_aggregate),
-            mapOption(toGQLContainer),        console.log(JSON.stringify(container));
-
+            mapOption(toGQLContainer),
             toNullable
         )
 
@@ -53,10 +52,10 @@ const isContainerSourceOfConnection = (container_id: AggregateId<AggregateType.C
 const convertConnectionTargetToReference = (connection: Connection) =>
     aggregateIdToReference(connection.target_id);
 
-export const getUsesOfContainer = (services: Services) =>
-    (container_name: string) =>
+export const getUsesOfContainer = (services: Repository) =>
+    (container_id: AggregateId<AggregateType.Container>) =>
         pipe(
             services.get_aggregates(AggregateType.Connection),
-            filter(isContainerSourceOfConnection(containerId(container_name))),
+            filter(isContainerSourceOfConnection(container_id)),
             map(convertConnectionTargetToReference)
         );

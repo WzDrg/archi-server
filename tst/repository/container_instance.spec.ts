@@ -1,6 +1,6 @@
 import { none, isSome, some } from "fp-ts/lib/Option";
-import { createContainerInstance, containerInstanceId, mergeContainerInstance } from "../../src/core/aggregates/container_instance";
-import { serverId } from "../../src/core/aggregates/server";
+import { createContainerInstance, containerInstanceId, mergeContainerInstance } from "../../src/repository/aggregates/container_instance";
+import { serverId } from "../../src/repository/aggregates/server";
 
 describe("createContainerInstance", () => {
     it("should create a new deployed container", () => {

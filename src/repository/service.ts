@@ -10,7 +10,7 @@ type GetAggregates = <T extends AggregateType>(type: T) => Aggregate<T>[];
 type ExecuteCommand = <T extends AggregateType>(command: Command<T>) => Event<T>[];
 type ExecuteCommands = (commands: Command<any>[]) => Event<any>[];
 
-export interface Services {
+export interface Repository {
     get_aggregate: GetAggregate;
     get_aggregates: GetAggregates;
     execute_command: ExecuteCommand;
@@ -23,7 +23,7 @@ const eventsToAggregate = <T extends AggregateType>(events: Event<T>[]) =>
 
 // Construct a single aggregate using the available events
 const getAggregate = (event_store: EventStore): GetAggregate =>
-    <T extends AggregateType>(id:AggregateId<T>) =>
+    <T extends AggregateType>(id: AggregateId<T>) =>
         pipe(
             event_store.get_events_of_aggregate(id.type, id.id),
             eventsToAggregate
@@ -65,7 +65,7 @@ const executeCommands = (event_store: EventStore): ExecuteCommands =>
         reduce([], (result: Event<any>[], command: Command<any>) => result.concat(executeCommand(event_store)(command)))(commands);
 
 
-export const services = (event_store: EventStore): Services => ({
+export const repositoryServices = (event_store: EventStore): Repository => ({
     get_aggregate: getAggregate(event_store),
     get_aggregates: getAggregates(event_store),
     execute_command: executeCommand(event_store),

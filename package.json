@@ -44,7 +44,7 @@
     "roots": [
       "<rootDir>/tst"
     ],
-    "collectCoverage": true,
+    "collectCoverage": false,
     "testMatch": [
       "**/__tests__/**/*.+(ts|tsx|js)",
       "**/?(*.)+(spec|test).+(ts|tsx|js)"

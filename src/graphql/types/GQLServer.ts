@@ -1,9 +1,9 @@
 import { pipe } from "fp-ts/lib/pipeable";
 import { map, filter } from "fp-ts/lib/Array";
 
-import { Services } from "../../core/service";
-import { AggregateType } from "../../core/types";
-import { Server } from "../../core/aggregates/server";
+import { Repository } from "../../repository/service";
+import { AggregateType } from "../../repository/types";
+import { Server } from "../../repository/aggregates/server";
 
 // Server returned by GraphQL queries
 export interface GQLServer {
@@ -18,7 +18,7 @@ const coreServerToServer = (coreServer: Server): GQLServer =>
     });
 
 // Find the servers 
-export const serversOfEnvironment = (services: Services) =>
+export const serversOfEnvironment = (services: Repository) =>
     (name: string) =>
         pipe(
             services.get_aggregates(AggregateType.Server),

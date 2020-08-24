@@ -1,6 +1,6 @@
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
-import { Services } from "../core/service";
+import { Repository } from "../repository/service";
 import typeDefs from "./TypeDefs";
 import cors from "cors";
 import { getSoftwareSystems, getSoftwareSystemUses } from "./types/SoftwareSystem";
@@ -8,16 +8,17 @@ import { getContainersOfSoftwareSystem, getUsesOfContainer, getContainerOfContai
 import { getEnvironments } from "./types/GQLEnvironment";
 import { serversOfEnvironment } from "./types/GQLServer";
 import { getContainerInstancesOfServer } from "./types/GQLContainerInstance";
-import { serverId } from "../core/aggregates/server";
-import { containerInstanceId } from "../core/aggregates/container_instance";
-import { softwareSystemId } from "../core/aggregates/software_system";
+import { serverId } from "../repository/aggregates/server";
+import { containerInstanceId } from "../repository/aggregates/container_instance";
+import { softwareSystemId } from "../repository/aggregates/software_system";
+import { containerId } from "../repository/aggregates/container";
 
 export interface ServerConfiguration {
   playground: boolean;
   introspection: boolean;
 }
 
-export const createApolloServer = (services: Services) => {
+export const createApolloServer = (services: Repository) => {
   return new ApolloServer({
     typeDefs: typeDefs,
     resolvers: {
@@ -30,7 +31,7 @@ export const createApolloServer = (services: Services) => {
         uses: (parent, _, { services }) => getSoftwareSystemUses(services)(parent.id)
       },
       Container: {
-        uses: (parent, _, { services }) => getUsesOfContainer(services)(parent.name)
+        uses: (parent, _, { services }) => getUsesOfContainer(services)(containerId(parent.id))
       },
       Environment: {
         servers: (parent, _, { services }) => serversOfEnvironment(services)(parent.name)
@@ -46,7 +47,7 @@ export const createApolloServer = (services: Services) => {
   });
 }
 
-export const startServer = async (services: Services) => {
+export const startServer = async (services: Repository) => {
   const app = express();
   app.use(cors());
   createApolloServer(services).applyMiddleware({ app: app, path: "/graphql", cors: false });

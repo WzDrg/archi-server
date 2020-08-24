@@ -1,9 +1,9 @@
 import { pipe } from "fp-ts/lib/pipeable";
 import { map, uniq } from "fp-ts/lib/Array";
 
-import { Services } from "../../core/service";
-import { AggregateType } from "../../core/types";
-import { Server } from "../../core/aggregates/server";
+import { Repository } from "../../repository/service";
+import { AggregateType } from "../../repository/types";
+import { Server } from "../../repository/aggregates/server";
 import { eqString } from "fp-ts/lib/Eq";
 
 interface GQLEnvironment {
@@ -20,7 +20,7 @@ const serversToEnvironments = (servers: Server[]): GQLEnvironment[] =>
     );
 
 // Retrieve a list of all environments
-export const getEnvironments = (services: Services) =>
+export const getEnvironments = (services: Repository) =>
     (): GQLEnvironment[] =>
         pipe(
             services.get_aggregates(AggregateType.Server),

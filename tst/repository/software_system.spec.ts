@@ -1,5 +1,5 @@
 import { none, isSome, some, toNullable } from "fp-ts/lib/Option"
-import { createSoftwareSystem, SoftwareSystem, softwareSystemId, updateSoftwareSystem, mergeSoftwareSystem } from "../../src/core/aggregates/software_system";
+import { createSoftwareSystem, SoftwareSystem, softwareSystemId, updateSoftwareSystem, mergeSoftwareSystem } from "../../src/repository/aggregates/software_system";
 
 describe("createSoftwareSystem", () => {
     it("should create a new software system", () => {

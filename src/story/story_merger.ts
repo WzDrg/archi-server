@@ -4,14 +4,14 @@ import { safeLoad } from 'js-yaml';
 import { readdirSync } from "fs";
 
 import { Story, Environment, Server, ContainerInstance, SoftwareSystem, Container, Uses, Communication } from "./story";
-import { Services } from "../core/service";
-import { Command, AggregateType, AggregateId } from "../core/types";
-import { mergeServer } from "../core/aggregates/server";
-import { mergeContainerInstance, containerInstanceId } from "../core/aggregates/container_instance";
-import { mergeSoftwareSystem, softwareSystemId } from "../core/aggregates/software_system";
-import { mergeContainer, containerId } from "../core/aggregates/container";
-import { mergeConnection } from "../core/aggregates/connection";
-import { mergeConnectionInstance } from "../core/aggregates/connection_instance";
+import { Repository } from "../repository/service";
+import { Command, AggregateType, AggregateId } from "../repository/types";
+import { mergeServer } from "../repository/aggregates/server";
+import { mergeContainerInstance, containerInstanceId } from "../repository/aggregates/container_instance";
+import { mergeSoftwareSystem, softwareSystemId } from "../repository/aggregates/software_system";
+import { mergeContainer, containerId } from "../repository/aggregates/container";
+import { mergeConnection } from "../repository/aggregates/connection";
+import { mergeConnectionInstance } from "../repository/aggregates/connection_instance";
 import { join, resolve } from "path";
 import { readFileSync } from "fs";
 
@@ -101,7 +101,7 @@ const stringToStory = (content: string) => {
 }
 
 // Process the content of a single story
-export const processStory = (services: Services) =>
+export const processStory = (services: Repository) =>
     (content: string) =>
         pipe(
             stringToStory(content),
@@ -110,7 +110,7 @@ export const processStory = (services: Services) =>
         );
 
 // Process all stories contained within a folder
-export const processStoriesOfFolder = (services: Services) =>
+export const processStoriesOfFolder = (services: Repository) =>
     (folder: string) =>
         pipe(
             readdirSync(folder),

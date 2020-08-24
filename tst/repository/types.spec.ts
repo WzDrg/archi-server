@@ -1,4 +1,4 @@
-import { aggregateTypes, AggregateType } from "../../src/core/types"
+import { aggregateTypes, AggregateType } from "../../src/repository/types"
 
 describe("aggregateTypes", () => {
     it("should contain all aggregate types", () => {

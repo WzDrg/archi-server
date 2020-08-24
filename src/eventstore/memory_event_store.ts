@@ -1,5 +1,5 @@
-import { GetEventsOfAggregate, GetEventsOfAggregateType, StoreEvents, EventStore } from "../core/event_store"
-import { AggregateType, Event } from "../core/types"
+import { GetEventsOfAggregate, GetEventsOfAggregateType, StoreEvents, EventStore } from "../repository/event_store"
+import { AggregateType, Event } from "../repository/types"
 
 const getEventsOfAggregateType = (eventsByType: Map<AggregateType, Event<any>[]>): GetEventsOfAggregateType =>
     <T extends AggregateType>(type: T) =>

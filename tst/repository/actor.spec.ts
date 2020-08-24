@@ -1,5 +1,5 @@
 import { none, isSome, toNullable, some } from "fp-ts/lib/Option";
-import { createActor, actorId, updateActor, Actor, mergeActor } from "../../src/core/aggregates/actor";
+import { createActor, actorId, updateActor, Actor, mergeActor } from "../../src/repository/aggregates/actor";
 
 describe("createActor", () => {
     it("should create a actor", () => {

@@ -1,6 +1,6 @@
 import { none, isSome, toNullable, some } from "fp-ts/lib/Option";
-import { createContainer, containerId, updateContainer, Container, mergeContainer } from "../../src/core/aggregates/container";
-import { softwareSystemId } from "../../src/core/aggregates/software_system";
+import { createContainer, containerId, updateContainer, Container, mergeContainer } from "../../src/repository/aggregates/container";
+import { softwareSystemId } from "../../src/repository/aggregates/software_system";
 
 describe("createContainer", () => {
     it("should create a container", () => {
