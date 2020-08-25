@@ -1,5 +1,5 @@
 import { none, isSome, some, toNullable } from "fp-ts/lib/Option";
-import { createServer, updateServer, mergeServer, serverId } from "../../src/repository/aggregates/server";
+import { createServer, updateServer, mergeServer, serverId } from "../../src/repository/server";
 
 describe("createServer", () => {
     it("should create a server created event", () => {

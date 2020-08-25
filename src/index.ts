@@ -1,16 +1,17 @@
-
 import { startServer, ServerConfiguration } from './graphql/GraphQLServer';
-import { memoryEventStore } from './eventstore/memory_event_store';
-import { repositoryServices } from './repository/service';
-import { processStory, processStoriesOfFolder } from './story/story_merger';
+import { memoryEventStore } from './repository/MemoryEventStore';
+import { readStoriesFromFolder } from './story/StoryReader';
+import { pipe } from 'fp-ts/lib/pipeable';
+import { appendStoriesToEventStore } from "./session/StoryAppender";
 
-let event_store = memoryEventStore();
-let core_services = repositoryServices(event_store);
-processStoriesOfFolder(core_services)("./src/resources");
+let event_store = pipe(
+  readStoriesFromFolder("./src/resources"),
+  appendStoriesToEventStore(memoryEventStore())
+);
 
 const config: ServerConfiguration = {
   introspection: true,
   playground: true,
 }
 
-startServer(core_services);
+startServer(event_store);

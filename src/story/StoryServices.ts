@@ -1,4 +1,4 @@
-import { Story } from "./story";
+import { Story } from "./Story";
 
 export type GetStoryCount = () => number;
 export type AddStory = (story: Story) => boolean;

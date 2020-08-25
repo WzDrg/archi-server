@@ -1,5 +1,5 @@
 import { Option, isSome, some, none, isNone, toNullable } from "fp-ts/lib/Option";
-import { Aggregate, AggregateId, AggregateType, Event, Command } from "../types";
+import { Aggregate, AggregateId, AggregateType, Event, Command } from "./types";
 
 export const connectionInstanceId = (id: string): AggregateId<AggregateType.ConnectionInstance> => ({
     id: id,

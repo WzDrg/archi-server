@@ -1,9 +1,10 @@
 import { pipe } from "fp-ts/lib/pipeable";
 import { map, filter } from "fp-ts/lib/Array";
 
-import { Repository } from "../../repository/service";
-import { AggregateType } from "../../repository/types";
-import { Server } from "../../repository/aggregates/server";
+import { AggregateType } from "../repository/types";
+import { Server } from "../repository/server";
+import { EventStore } from "../repository/EventStore";
+import { getAggregates } from "../repository/AggregateBuilder";
 
 // Server returned by GraphQL queries
 export interface GQLServer {
@@ -18,10 +19,10 @@ const coreServerToServer = (coreServer: Server): GQLServer =>
     });
 
 // Find the servers 
-export const serversOfEnvironment = (services: Repository) =>
+export const serversOfEnvironment = (event_store: EventStore) =>
     (name: string) =>
         pipe(
-            services.get_aggregates(AggregateType.Server),
+            getAggregates(event_store)(AggregateType.Server),
             filter((server: Server) => name === (server.segment ?? "")),
             map(coreServerToServer)
         )

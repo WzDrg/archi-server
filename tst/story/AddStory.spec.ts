@@ -1,8 +1,8 @@
 import { Story } from "../../src/story/story";
 import { storyServices } from "../../src/story/StoryServices";
 
-describe("Stories", () => {
-    it("should add a story", () => {
+describe("AddStory", () => {
+    it("should add a new story", () => {
         let story: Story = {
             context: "context",
             date: new Date(),
@@ -12,4 +12,5 @@ describe("Stories", () => {
         const result = story_services.add_story(story);
         expect(result).toBeTruthy();
     });
+
 });

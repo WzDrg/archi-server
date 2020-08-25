@@ -1,4 +1,4 @@
-import { Aggregate, AggregateType, AggregateId, Command, Event } from "../types";
+import { Aggregate, AggregateType, AggregateId, Command, Event } from "./types";
 import { Option, none, isSome, some, isNone, toNullable } from "fp-ts/lib/Option";
 
 export interface Container extends Aggregate<AggregateType.Container> {

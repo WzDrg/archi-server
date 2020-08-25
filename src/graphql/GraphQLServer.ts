@@ -1,56 +1,56 @@
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
-import { Repository } from "../repository/service";
 import typeDefs from "./TypeDefs";
 import cors from "cors";
-import { getSoftwareSystems, getSoftwareSystemUses } from "./types/SoftwareSystem";
-import { getContainersOfSoftwareSystem, getUsesOfContainer, getContainerOfContainerInstance } from "./types/GQLContainer";
-import { getEnvironments } from "./types/GQLEnvironment";
-import { serversOfEnvironment } from "./types/GQLServer";
-import { getContainerInstancesOfServer } from "./types/GQLContainerInstance";
-import { serverId } from "../repository/aggregates/server";
-import { containerInstanceId } from "../repository/aggregates/container_instance";
-import { softwareSystemId } from "../repository/aggregates/software_system";
-import { containerId } from "../repository/aggregates/container";
+import { getSoftwareSystems, getSoftwareSystemUses } from "./SoftwareSystem";
+import { getContainersOfSoftwareSystem, getUsesOfContainer, getContainerOfContainerInstance } from "./GQLContainer";
+import { getEnvironments } from "./GQLEnvironment";
+import { serversOfEnvironment } from "./GQLServer";
+import { getContainerInstancesOfServer } from "./GQLContainerInstance";
+import { serverId } from "../repository/server";
+import { containerInstanceId } from "../repository/container_instance";
+import { softwareSystemId } from "../repository/software_system";
+import { containerId } from "../repository/container";
+import { EventStore } from "../repository/EventStore";
 
 export interface ServerConfiguration {
   playground: boolean;
   introspection: boolean;
 }
 
-export const createApolloServer = (services: Repository) => {
+export const createApolloServer = (event_store: EventStore) => {
   return new ApolloServer({
     typeDefs: typeDefs,
     resolvers: {
       Query: {
-        softwareSystems: (_, __, { services }) => getSoftwareSystems(services)(),
-        environments: (_, __, { services }) => getEnvironments(services)()
+        softwareSystems: (_, __, { event_store }) => getSoftwareSystems(event_store)(),
+        environments: (_, __, { event_store }) => getEnvironments(event_store)()
       },
       SoftwareSystem: {
-        containers: (parent, _, { services }) => getContainersOfSoftwareSystem(services)(softwareSystemId(parent.id)),
-        uses: (parent, _, { services }) => getSoftwareSystemUses(services)(parent.id)
+        containers: (parent, _, { event_store }) => getContainersOfSoftwareSystem(event_store)(softwareSystemId(parent.id)),
+        uses: (parent, _, { event_store }) => getSoftwareSystemUses(event_store)(parent.id)
       },
       Container: {
-        uses: (parent, _, { services }) => getUsesOfContainer(services)(containerId(parent.id))
+        uses: (parent, _, { event_store }) => getUsesOfContainer(event_store)(containerId(parent.id))
       },
       Environment: {
-        servers: (parent, _, { services }) => serversOfEnvironment(services)(parent.name)
+        servers: (parent, _, { event_store }) => serversOfEnvironment(event_store)(parent.name)
       },
       Server: {
-        containers: (parent, _, { services }) => getContainerInstancesOfServer(services)(serverId(parent.id))
+        containers: (parent, _, { event_store }) => getContainerInstancesOfServer(event_store)(serverId(parent.id))
       },
       ContainerInstance: {
-        container: (parent, _, { services }) => getContainerOfContainerInstance(services)(containerInstanceId(parent.id))
+        container: (parent, _, { event_store }) => getContainerOfContainerInstance(event_store)(containerInstanceId(parent.id))
       }
     },
-    context: { services: services }
+    context: { event_store: event_store }
   });
 }
 
-export const startServer = async (services: Repository) => {
+export const startServer = async (event_store: EventStore) => {
   const app = express();
   app.use(cors());
-  createApolloServer(services).applyMiddleware({ app: app, path: "/graphql", cors: false });
+  createApolloServer(event_store).applyMiddleware({ app: app, path: "/graphql", cors: false });
   app.listen({ port: 4000 }, () => { console.log(`Server listening`) });
 }
 

@@ -1,10 +1,11 @@
 import { pipe } from "fp-ts/lib/pipeable";
 import { map, uniq } from "fp-ts/lib/Array";
 
-import { Repository } from "../../repository/service";
-import { AggregateType } from "../../repository/types";
-import { Server } from "../../repository/aggregates/server";
+import { AggregateType } from "../repository/types";
+import { Server } from "../repository/server";
 import { eqString } from "fp-ts/lib/Eq";
+import { EventStore } from "../repository/EventStore";
+import { getAggregates } from "../repository/AggregateBuilder";
 
 interface GQLEnvironment {
     name: string
@@ -20,9 +21,9 @@ const serversToEnvironments = (servers: Server[]): GQLEnvironment[] =>
     );
 
 // Retrieve a list of all environments
-export const getEnvironments = (services: Repository) =>
+export const getEnvironments = (event_store: EventStore) =>
     (): GQLEnvironment[] =>
         pipe(
-            services.get_aggregates(AggregateType.Server),
+            getAggregates(event_store)(AggregateType.Server),
             serversToEnvironments
         );

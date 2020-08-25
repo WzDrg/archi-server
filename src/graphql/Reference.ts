@@ -1,4 +1,4 @@
-import { AggregateId, AggregateType } from "../../repository/types";
+import { AggregateId, AggregateType } from "../repository/types";
 
 const aggregateTypeToItemType = (aggregateType: AggregateType) => {
     switch (aggregateType) {

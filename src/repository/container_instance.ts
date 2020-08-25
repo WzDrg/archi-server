@@ -1,5 +1,5 @@
 import { Option, isSome, some, isNone, toNullable } from "fp-ts/lib/Option";
-import { AggregateId, Aggregate, Event, AggregateType, ApplyEvent, Command } from "../types";
+import { AggregateId, Aggregate, Event, AggregateType, ApplyEvent, Command } from "./types";
 import { serverId } from "./server";
 
 // A container instance represents a deployed container

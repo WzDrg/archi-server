@@ -1,19 +1,16 @@
-import { reduce, map, filter } from "fp-ts/lib/Array";
+import { reduce } from "fp-ts/lib/Array";
 import { pipe } from "fp-ts/lib/pipeable";
-import { safeLoad } from 'js-yaml';
-import { readdirSync } from "fs";
 
-import { Story, Environment, Server, ContainerInstance, SoftwareSystem, Container, Uses, Communication } from "./story";
-import { Repository } from "../repository/service";
-import { Command, AggregateType, AggregateId } from "../repository/types";
-import { mergeServer } from "../repository/aggregates/server";
-import { mergeContainerInstance, containerInstanceId } from "../repository/aggregates/container_instance";
-import { mergeSoftwareSystem, softwareSystemId } from "../repository/aggregates/software_system";
-import { mergeContainer, containerId } from "../repository/aggregates/container";
-import { mergeConnection } from "../repository/aggregates/connection";
-import { mergeConnectionInstance } from "../repository/aggregates/connection_instance";
-import { join, resolve } from "path";
-import { readFileSync } from "fs";
+import { Story, Environment, Server, ContainerInstance, SoftwareSystem, Container, Uses, Communication } from "../story/Story";
+import { EventStore } from "../repository/EventStore";
+import { appendCommand } from "../repository/CommandAppender";
+import { AggregateType, AggregateId, Command } from "../repository/types";
+import { mergeConnectionInstance } from "../repository/connection_instance";
+import { containerInstanceId, mergeContainerInstance } from "../repository/container_instance";
+import { mergeServer } from "../repository/server";
+import { containerId, mergeContainer } from "../repository/container";
+import { mergeConnection } from "../repository/connection";
+import { softwareSystemId, mergeSoftwareSystem } from "../repository/software_system";
 
 const toTargetInstanceId = (id: string, type?: string): AggregateId<any> =>
     ({ id: id, type: type ? AggregateType[type] : AggregateType.ContainerInstance });
@@ -82,7 +79,7 @@ const fromSoftwareSystem = (name: string, softwareSystem: SoftwareSystem): Comma
         : []];
 
 
-export const fromStory = (story: Story): Command<any>[] =>
+const fromStory = (story: Story): Command<any>[] =>
     [...story.environments
         ? reduce([], (commands: Command<any>[], env: string) =>
             commands.concat(fromEnvironment(env, story.environments[env])))
@@ -94,28 +91,16 @@ export const fromStory = (story: Story): Command<any>[] =>
             (Object.keys(story.softwareSystems))
         : []];
 
-
-// Convert a yaml string to a story
-const stringToStory = (content: string) => {
-    return safeLoad(content) as Story;
-}
-
-// Process the content of a single story
-export const processStory = (services: Repository) =>
-    (content: string) =>
+export const appendStoryToEventStore = (events: EventStore) =>
+    (story: Story) =>
         pipe(
-            stringToStory(content),
-            fromStory,
-            services.execute_commands
+            fromStory(story),
+            reduce(events, (events, command) => appendCommand(events)(command))
         );
 
-// Process all stories contained within a folder
-export const processStoriesOfFolder = (services: Repository) =>
-    (folder: string) =>
+export const appendStoriesToEventStore = (eventStore: EventStore) =>
+    (stories: Story[]): EventStore =>
         pipe(
-            readdirSync(folder),
-            map(filename => resolve(join(folder, filename))),
-            filter(filename => filename.toUpperCase().endsWith(".YML") || filename.toUpperCase().endsWith(".YAML")),
-            map(filename => readFileSync(filename, { encoding: 'UTF-8' })),
-            map(processStory(services))
-        )
+            stories,
+            reduce(eventStore, (events, story) => appendStoryToEventStore(events)(story))
+        );

@@ -1,20 +1,24 @@
 import { Story } from "../../src/story/story";
-import { fromStory } from "../../src/story/story_merger";
 import { AggregateType } from "../../src/repository/types";
+import { memoryEventStore } from "../../src/repository/MemoryEventStore";
+import { appendStoryToEventStore } from "../../src/session/StoryAppender";
+import { getAggregates } from "../../src/repository/AggregateBuilder";
 
-describe("storiesToCommands", () => {
+describe("appendStory", () => {
     it("should convert empty story", () => {
+        const event_store = memoryEventStore();
         const story: Story = {
             description: "Simple story",
             context: "Document Generation",
             date: new Date(2020, 7, 5),
             environments: {}
         }
-        const commands = fromStory(story);
-        expect(commands).toHaveLength(0);
+        const result = appendStoryToEventStore(event_store)(story);
+        expect(result.size()).toEqual(0);
     });
 
     it("should convert a simple story", () => {
+        const event_store = memoryEventStore();
         const story: Story = {
             description: "Simple story",
             context: "Document Generation",
@@ -29,14 +33,13 @@ describe("storiesToCommands", () => {
                 }
             }
         }
-        const commands = fromStory(story);
-        expect(commands).toHaveLength(1);
-        expect(commands[0]).toHaveProperty("id");
-        expect(commands[0].id).toHaveProperty("type", AggregateType.Server);
-        expect(commands[0].id).toHaveProperty("id", "hn005");
+        const result = appendStoryToEventStore(event_store)(story);
+        expect(result.size()).toEqual(1);
+        expect(getAggregates(event_store)(AggregateType.Server)).toHaveLength(1);
     });
 
     it("should convert the archiving service", () => {
+        const event_store = memoryEventStore();
         const story: Story = {
             description: "Archiving service",
             date: new Date(2020, 7, 11),
@@ -110,8 +113,8 @@ describe("storiesToCommands", () => {
                 }
             }
         };
-        const commands = fromStory(story);
-        //        commands.forEach(command => console.log(command.id.id));
-        expect(commands).toHaveLength(14);
+        const result = appendStoryToEventStore(event_store)(story);
+        expect(result.size()).toEqual(14);
+        expect(getAggregates(event_store)(AggregateType.Server)).toHaveLength(2);
     })
 });

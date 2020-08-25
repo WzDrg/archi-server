@@ -1,4 +1,4 @@
-import { Aggregate, AggregateType, AggregateId, Command } from "../types";
+import { Aggregate, AggregateType, AggregateId, Command } from "./types";
 import { isSome, some, Option, isNone, toNullable } from "fp-ts/lib/Option";
 
 export const softwareSystemId = (name: string): AggregateId<AggregateType.SoftwareSystem> =>

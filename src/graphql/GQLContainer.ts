@@ -2,12 +2,13 @@ import { pipe } from "fp-ts/lib/pipeable";
 import { filter, map } from "fp-ts/lib/Array";
 import { fromNullable, map as mapOption, chain as chainOption, toNullable } from "fp-ts/lib/Option";
 
-import { AggregateType, eqAggregateId, AggregateId } from "../../repository/types";
-import { Container, containerId } from "../../repository/aggregates/container";
-import { Repository } from "../../repository/service";
-import { Connection } from "../../repository/aggregates/connection";
+import { AggregateType, eqAggregateId, AggregateId } from "../repository/types";
+import { Container } from "../repository/container";
+import { Connection } from "../repository/connection";
 import { aggregateIdToReference } from "./Reference";
-import { ContainerInstance } from "../../repository/aggregates/container_instance";
+import { ContainerInstance } from "../repository/container_instance";
+import { EventStore } from "../repository/EventStore";
+import { getAggregates, getAggregate } from "../repository/AggregateBuilder";
 
 
 const toGQLContainer = (container: Container) =>
@@ -20,27 +21,27 @@ const isContainerOfSoftwareSystem = (softwareSystemId: AggregateId<AggregateType
     (container: Container) =>
         eqAggregateId(container.software_system, softwareSystemId);
 
-export const getAllContainers = (services: Repository) =>
+export const getAllContainers = (event_store: EventStore) =>
     () =>
         pipe(
-            services.get_aggregates(AggregateType.Container),
+            getAggregates(event_store)(AggregateType.Container),
             map(toGQLContainer)
         );
 
-export const getContainersOfSoftwareSystem = (services: Repository) =>
+export const getContainersOfSoftwareSystem = (event_store: EventStore) =>
     (softwareSystemId: AggregateId<AggregateType.SoftwareSystem>) =>
         pipe(
-            services.get_aggregates(AggregateType.Container),
+            getAggregates(event_store)(AggregateType.Container),
             filter(isContainerOfSoftwareSystem(softwareSystemId)),
             map(toGQLContainer)
         );
 
-export const getContainerOfContainerInstance = (services: Repository) =>
+export const getContainerOfContainerInstance = (event_store: EventStore) =>
     (container_instance_id: AggregateId<AggregateType.ContainerInstance>) =>
         pipe(
-            services.get_aggregate(container_instance_id),
+            getAggregate(event_store)(container_instance_id),
             chainOption((containerInstance: ContainerInstance) => fromNullable(containerInstance.container_id)),
-            chainOption(services.get_aggregate),
+            chainOption(getAggregate(event_store)),
             mapOption(toGQLContainer),
             toNullable
         )
@@ -52,10 +53,10 @@ const isContainerSourceOfConnection = (container_id: AggregateId<AggregateType.C
 const convertConnectionTargetToReference = (connection: Connection) =>
     aggregateIdToReference(connection.target_id);
 
-export const getUsesOfContainer = (services: Repository) =>
+export const getUsesOfContainer = (event_store: EventStore) =>
     (container_id: AggregateId<AggregateType.Container>) =>
         pipe(
-            services.get_aggregates(AggregateType.Connection),
+            getAggregates(event_store)(AggregateType.Connection),
             filter(isContainerSourceOfConnection(container_id)),
             map(convertConnectionTargetToReference)
         );

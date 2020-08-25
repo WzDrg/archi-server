@@ -1,9 +1,10 @@
 import { pipe } from "fp-ts/lib/pipeable";
 import { filter, map } from "fp-ts/lib/Array";
 
-import { Repository } from "../../repository/service";
-import { AggregateType, AggregateId } from "../../repository/types";
-import { ContainerInstance } from "../../repository/aggregates/container_instance";
+import { AggregateType, AggregateId } from "../repository/types";
+import { ContainerInstance } from "../repository/container_instance";
+import { EventStore } from "../repository/EventStore";
+import { getAggregates } from "../repository/AggregateBuilder";
 
 export interface GQLContainerInstance {
     id: string,
@@ -16,10 +17,10 @@ const toContainerInstance = (instance: ContainerInstance): GQLContainerInstance 
         name: instance.id.id
     })
 
-export const getContainerInstancesOfServer = (services: Repository) =>
+export const getContainerInstancesOfServer = (event_store: EventStore) =>
     (serverId: AggregateId<AggregateType.Server>) =>
         pipe(
-            services.get_aggregates(AggregateType.ContainerInstance),
+            getAggregates(event_store)(AggregateType.ContainerInstance),
             filter((container: ContainerInstance) =>
                 container.server_id.id === serverId.id),
             map(toContainerInstance)
