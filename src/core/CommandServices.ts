@@ -1,7 +1,7 @@
 import { pipe } from "fp-ts/lib/pipeable";
 import { reduce, } from "fp-ts/lib/Array";
 
-import { Command, AggregateType } from "./aggregates/types";
+import { Command, AggregateType } from "./model/types";
 import { EventStore } from "./proxy/EventStore";
 import { getAggregate } from "./AggregateServices";
 

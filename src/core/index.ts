@@ -4,9 +4,10 @@ export * from "./StoryServices";
 export * from "./proxy/EventStore";
 export * from "./proxy/StoryStore";
 
-export * from "./aggregates/types";
-export * from "./aggregates/Container";
-export * from "./aggregates/SoftwareSystem"
-export * from "./aggregates/Server";
-export * from "./aggregates/ContainerInstance";
-export * from "./aggregates/Connection";
+export * from "./model/types";
+export * from "./model/Container";
+export * from "./model/SoftwareSystem"
+export * from "./model/Server";
+export * from "./model/ContainerInstance";
+export * from "./model/Connection";
+export * from "./model/Story";

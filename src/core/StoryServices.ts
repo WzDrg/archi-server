@@ -1,4 +1,5 @@
-import { StoryStore, Story } from "./proxy/StoryStore";
+import { StoryStore } from "./proxy/StoryStore";
+import { Story } from "./model/Story";
 import { Fault } from "./Fault";
 import { Either } from "fp-ts/lib/Either";
 

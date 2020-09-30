@@ -1,8 +1,8 @@
-import { createActor, actorId, updateActor, Actor, mergeActor } from "../aggregates/Actor";
+import { createActor, actorId, updateActor, mergeActor } from "../model/Actor";
 import { memoryEventStore } from "../../eventstore/MemoryEventStore";
 import { appendCommand, appendCommands } from "../CommandServices";
 import { getAggregates } from "../AggregateServices";
-import { AggregateType } from "../aggregates/types";
+import { AggregateType } from "../model/types";
 
 describe("AddActor", () => {
     it("should create a actor", () => {

@@ -1,17 +1,17 @@
 import { reduce } from "fp-ts/lib/Array";
 import { pipe } from "fp-ts/lib/pipeable";
 
-import { EventStore } from "./proxy/EventStore";
-import { appendCommand } from "./CommandServices";
-import { AggregateType, AggregateId, Command } from "./aggregates/types";
-import { mergeConnectionInstance } from "./aggregates/ConnectionInstance";
-import { containerInstanceId, mergeContainerInstance } from "./aggregates/ContainerInstance";
-import { mergeServer } from "./aggregates/Server";
-import { containerId, mergeContainer } from "./aggregates/Container";
-import { mergeConnection } from "./aggregates/Connection";
-import { softwareSystemId, mergeSoftwareSystem } from "./aggregates/SoftwareSystem";
-import { memoryEventStore } from "../eventstore/MemoryEventStore";
-import { Story, StoryContainer, StoryContainerInstance, StoryServer, StorySoftwareSystem, StoryUses, StoryCommunication, StoryEnvironment } from "./proxy/StoryStore";
+import { EventStore } from "../proxy/EventStore";
+import { appendCommand } from "../CommandServices";
+import { AggregateType, AggregateId, Command } from "../model/types";
+import { mergeConnectionInstance } from "../model/ConnectionInstance";
+import { containerInstanceId, mergeContainerInstance } from "../model/ContainerInstance";
+import { mergeServer } from "../model/Server";
+import { containerId, mergeContainer } from "../model/Container";
+import { mergeConnection } from "../model/Connection";
+import { softwareSystemId, mergeSoftwareSystem } from "../model/SoftwareSystem";
+import { memoryEventStore } from "../../eventstore/MemoryEventStore";
+import { Story, StoryContainer, StoryContainerInstance, StoryServer, StorySoftwareSystem, StoryUses, StoryCommunication, StoryEnvironment } from "../model/Story";
 
 const toTargetInstanceId = (id: string, type?: string): AggregateId<any> =>
     ({ id: id, type: type ? AggregateType[type] : AggregateType.ContainerInstance });

@@ -1,9 +1,9 @@
 import { right, fold } from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/pipeable";
 
-import { AggregateType } from "../aggregates/types";
+import { AggregateType } from "../model/types";
 import { aggregateServices } from "../AggregateServices";
-import { Story } from "../proxy/StoryStore";
+import { Story } from "../model/Story";
 
 
 const storyStore = {

@@ -1,9 +1,9 @@
 import { fold, right } from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
 
-import { Story } from "../proxy/StoryStore";
+import { Story } from "../model/Story";
 import { aggregateServices } from "../AggregateServices";
-import { AggregateType } from "../aggregates/types";
+import { AggregateType } from "../model/types";
 
 const storyStore = {
     addStory: jest.fn(),

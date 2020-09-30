@@ -9,7 +9,7 @@ import { getContainersOfSoftwareSystem, getUsesOfContainer, getContainerOfContai
 import { getEnvironments } from "./query/EnvironmentQuery";
 import { serversOfEnvironment } from "./query/ServerQuery";
 import { getContainerInstancesOfServer } from "./query/ContainerInstanceQuery";
-import { serverId } from "../core/aggregates/Server";
+import { serverId } from "../core/model/Server";
 import { queryAllStories } from "./query/StoryQuery";
 import { containerId, containerInstanceId, softwareSystemId, AggregateServices, StoryServices } from "../core/index";
 import { Fault } from "../core/Fault";
