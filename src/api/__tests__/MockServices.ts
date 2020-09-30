@@ -1,8 +1,8 @@
-import { createContainer } from "../../core/aggregates/Container";
-import { createContainerInstance } from "../../core/aggregates/ContainerInstance";
-import { createSoftwareSystem } from "../../core/aggregates/SoftwareSystem";
-import { createConnection } from "../../core/aggregates/connection";
-import { createServer } from "../../core/aggregates/Server";
+import { createContainer } from "../../core/model/Container";
+import { createContainerInstance } from "../../core/model/ContainerInstance";
+import { createSoftwareSystem } from "../../core/model/SoftwareSystem";
+import { createConnection } from "../../core/model/connection";
+import { createServer } from "../../core/model/Server";
 
 export const ss_docgen = createSoftwareSystem("Document Generation", "");
 export const ss_doccapt = createSoftwareSystem("Document Capture", "");

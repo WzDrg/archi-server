@@ -44,7 +44,7 @@
 			],
 			"jest": {
 						"rootDir": "src",
-						"collectCoverage": false,
+						"collectCoverage": true,
 						"testMatch": [
 									"**/__tests__/**/?(*.)+(spec|test).+(ts|tsx|js)"
 						],

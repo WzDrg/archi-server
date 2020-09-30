@@ -1,4 +1,4 @@
-import { AggregateType, Event, AggregateId } from "../aggregates/types";
+import { AggregateType, Event } from "../model/types";
 
 export type GetEventCount = () => number;
 export type GetEventsOfAggregateType = <T extends AggregateType>(type: T) =>
