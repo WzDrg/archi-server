@@ -10,7 +10,7 @@ environments:
           JRE-1.6.0.27:
             location: C:\\Program Files\\Java\\jre6\\bin\\
           JDK-1.6.0.27:
-            location: C:\\Program Files\\Java\\jdk1.6.0_27\\jre\\bin\\      
+            location: C:\\Program Files\\Java\\jdk1.6.0_27\\jre\\bin\\
           JDK-1.8.0.161:
             location: C:\\Program Files\\Java\\jdk1.8.0_161\\bin\\
           JRE-1.8.0.191:
@@ -23,7 +23,7 @@ environments:
         description: Documentum frontend application server 2
         containers:
           JRE-1.6.0.27:
-            location: C:\\Program Files\\Java\\jre6\\bin\\ 
+            location: C:\\Program Files\\Java\\jre6\\bin\\
           JDK-1.6.0.27:
             location: C:\\Program Files\\Java\\jdk1.6.0_27\\jre\\bin    
           JDK-1.8.0.161:
