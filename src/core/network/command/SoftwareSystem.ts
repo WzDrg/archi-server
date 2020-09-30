@@ -1,13 +1,5 @@
-import { Aggregate, AggregateType, AggregateId, Command } from "./types";
+import { AggregateType, AggregateId, Command, SoftwareSystem, softwareSystemId } from "../model/Aggregates";
 import { isSome, some, Option, isNone, toNullable } from "fp-ts/lib/Option";
-
-export const softwareSystemId = (name: string): AggregateId<AggregateType.SoftwareSystem> =>
-    ({ id: name, type: AggregateType.SoftwareSystem });
-
-export interface SoftwareSystem extends Aggregate<AggregateType.SoftwareSystem> {
-    name: string;
-    description: string;
-}
 
 const applySoftwareSystemCreated = (name: string, description: string) =>
     (state: Option<SoftwareSystem>): Option<SoftwareSystem> =>

@@ -1,17 +1,5 @@
-import { Aggregate, AggregateType, AggregateId, Command, Event } from "./types";
+import { AggregateType, AggregateId, Command, Event, Container, containerId } from "../model/Aggregates";
 import { Option, none, isSome, some, isNone, toNullable } from "fp-ts/lib/Option";
-
-export interface Container extends Aggregate<AggregateType.Container> {
-    name: string;
-    description: string;
-    software_system: AggregateId<AggregateType.SoftwareSystem>;
-};
-
-export const containerId = (name: string): AggregateId<AggregateType.Container> =>
-    ({
-        id: name,
-        type: AggregateType.Container
-    });
 
 const applyContainerCreated = (name: string, description: string, software_system: AggregateId<AggregateType.SoftwareSystem>) =>
     (state: Option<Container>): Option<Container> => {

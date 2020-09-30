@@ -1,8 +1,8 @@
-import { createActor, actorId, updateActor, mergeActor } from "../model/Actor";
-import { memoryEventStore } from "../../eventstore/MemoryEventStore";
-import { appendCommand, appendCommands } from "../CommandServices";
+import { createActor, updateActor, mergeActor } from "../network/command/Actor";
+import { memoryEventStore } from "../network/MemoryEventStore";
+import { appendCommand, appendCommands } from "../network/command/CommandServices";
 import { getAggregates } from "../AggregateServices";
-import { AggregateType } from "../model/types";
+import { actorId, AggregateType } from "../network/model/Aggregates";
 
 describe("AddActor", () => {
     it("should create a actor", () => {

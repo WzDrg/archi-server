@@ -2,7 +2,7 @@ import { Either } from "fp-ts/lib/Either";
 import { Option } from "fp-ts/lib/Option";
 
 import { Fault } from "../Fault";
-import { NewStory, Story, StoryId } from "../model/Story";
+import { NewStory, Story, StoryId } from "../story/Story";
 
 export type AddStoryToStore = (story: NewStory) => Either<Fault, Story>;
 

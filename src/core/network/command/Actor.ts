@@ -1,15 +1,5 @@
 import { Option, isSome, some, isNone, toNullable } from "fp-ts/lib/Option";
-import { Aggregate, AggregateId, AggregateType, Event, Command } from "./types";
-
-export const actorId = (id: string): AggregateId<AggregateType.Actor> => ({
-    id: id,
-    type: AggregateType.Actor
-});
-
-export interface Actor extends Aggregate<AggregateType.Actor> {
-    name: string;
-    description: string;
-}
+import { AggregateId, AggregateType, Event, Command, Actor, actorId } from "../model/Aggregates";
 
 const applyActorCreated = (id: AggregateId<AggregateType.Actor>, name: string, description: string) =>
     (state: Option<Actor>): Option<Actor> =>

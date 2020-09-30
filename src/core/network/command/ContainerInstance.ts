@@ -1,18 +1,5 @@
 import { Option, isSome, some, isNone, toNullable } from "fp-ts/lib/Option";
-import { AggregateId, Aggregate, Event, AggregateType, ApplyEvent, Command } from "./types";
-import { serverId } from "./Server";
-
-// A container instance represents a deployed container
-export interface ContainerInstance extends Aggregate<AggregateType.ContainerInstance> {
-    server_id: AggregateId<AggregateType.Server>;
-    container_id?: AggregateId<AggregateType.Container>;
-    location?: string;
-}
-
-export const containerInstanceId = (id: string): AggregateId<AggregateType.ContainerInstance> => ({
-    type: AggregateType.ContainerInstance,
-    id: id
-});
+import { AggregateId, Event, AggregateType, ApplyEvent, Command, ContainerInstance, containerInstanceId, serverId } from "../model/Aggregates";
 
 const applyContainerInstanceCreated = (id: AggregateId<AggregateType.ContainerInstance>, server_id: AggregateId<AggregateType.Server>, container_id?: AggregateId<AggregateType.Container>): ApplyEvent<AggregateType.ContainerInstance> =>
     (state: Option<ContainerInstance>): Option<ContainerInstance> => {

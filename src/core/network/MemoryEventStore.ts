@@ -1,4 +1,4 @@
-import { GetEventsOfAggregate, GetEventsOfAggregateType, StoreEvents, EventStore, GetEventCount, AggregateType, Event } from "../core/index"
+import { GetEventsOfAggregate, GetEventsOfAggregateType, StoreEvents, EventStore, GetEventCount, AggregateType, Event } from "../index"
 
 type EventStorage = Map<AggregateType, Event<any>[]>;
 

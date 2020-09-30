@@ -1,16 +1,5 @@
 import { Option, isSome, some, none, isNone, toNullable } from "fp-ts/lib/Option";
-import { Aggregate, AggregateId, AggregateType, Event, Command } from "./types";
-
-export const connectionInstanceId = (id: string): AggregateId<AggregateType.ConnectionInstance> => ({
-    id: id,
-    type: AggregateType.ConnectionInstance
-});
-
-export interface ConnectionInstance extends Aggregate<AggregateType.ConnectionInstance> {
-    connection_id?: AggregateId<AggregateType.Connection>;
-    source_instance: AggregateId<any>;
-    target_instance: AggregateId<any>;
-}
+import { AggregateId, AggregateType, Event, Command, ConnectionInstance, connectionInstanceId } from "../model/Aggregates";
 
 const applyConnectionInstanceCreated = (id: AggregateId<AggregateType.ConnectionInstance>, source_instance: AggregateId<any>, target_instance: AggregateId<any>, connection_id?: AggregateId<AggregateType.Connection>) =>
     (state: Option<ConnectionInstance>): Option<ConnectionInstance> => {

@@ -1,9 +1,9 @@
 import { fold, right, chain, map, fromOption } from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
 
-import { Story } from "../model/Story";
+import { Story } from "../story/Story";
 import { aggregateServices } from "../AggregateServices";
-import { AggregateType } from "../model/types";
+import { AggregateType } from "../network/model/Aggregates";
 import { isSome, toNullable } from "fp-ts/lib/Option";
 
 const storyStore = {

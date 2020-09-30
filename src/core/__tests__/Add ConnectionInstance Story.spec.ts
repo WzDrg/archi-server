@@ -1,6 +1,6 @@
 import { some, none, isSome, toNullable } from "fp-ts/lib/Option"
-import { createConnectionInstance, connectionInstanceId, updateConnectionInstance, ConnectionInstance } from "../model/ConnectionInstance";
-import { containerInstanceId } from "../model/ContainerInstance";
+import { createConnectionInstance, updateConnectionInstance} from "../network/command/ConnectionInstance";
+import { ConnectionInstance, connectionInstanceId, containerInstanceId } from "../network/model/Aggregates";
 
 describe("createConnectionInstance", () => {
     it("should create a connection instance", () => {

@@ -3,13 +3,13 @@ import { reduce, map, filter } from "fp-ts/lib/Array";
 import { pipe } from "fp-ts/lib/pipeable";
 import { toArray } from "fp-ts/lib/Record";
 
-import { Aggregate, AggregateType, AggregateId, Event } from "./model/types";
-import { Story } from "./model/Story";
-import { EventStore } from "./proxy/EventStore";
+import { Aggregate, AggregateType, AggregateId, Event } from "./network/model/Aggregates";
+import { Story } from "./story/Story";
+import { EventStore } from "./network/EventStore";
 import { StoryStore } from "./proxy/StoryStore";
 import { Either, map as mapEither } from "fp-ts/lib/Either";
 import { Fault } from "./Fault";
-import { eventStoreFromStories } from "./rules/EventStoreBuilder";
+import { eventStoreFromStories } from "./story/EventStoreBuilder";
 
 export type GetAggregate = <T extends AggregateType>(id: AggregateId<T>) => Option<Aggregate<T>>;
 export type GetAggregates = <T extends AggregateType>(type: T) => Aggregate<T>[];

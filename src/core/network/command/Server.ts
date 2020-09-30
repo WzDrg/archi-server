@@ -1,21 +1,5 @@
 import { Option, none, some, isNone, isSome, toNullable } from "fp-ts/lib/Option";
-import { Aggregate, Event, Command, ApplyEvent, AggregateType, AggregateId } from "./types";
-
-export const serverId = (id: string): AggregateId<AggregateType.Server> => ({
-  type: AggregateType.Server,
-  id: id
-});
-
-export interface Server extends Aggregate<AggregateType.Server> {
-  name: string;
-  description: string;
-  segment?: string;
-  operating_system?: string;
-  tier?: number;
-  datacenter?: string;
-  cpu?: number;
-  memory?: string;
-}
+import { Server, Event, Command, ApplyEvent, AggregateType, serverId } from "../model/Aggregates";
 
 const applyServerCreated = (name: string, description: string, segment?: string, operating_system?: string, tier?: number, datacenter?: string, cpu?: number, memory?: string): ApplyEvent<AggregateType.Server> =>
   (server: Option<Server>): Option<Server> =>

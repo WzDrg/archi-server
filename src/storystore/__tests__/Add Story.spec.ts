@@ -1,5 +1,5 @@
 import {bimap} from "fp-ts/lib/Either";
-import { NewStory } from "../../core/model/Story";
+import { NewStory } from "../../core/story/Story";
 import {memoryStoryStore} from "../MemoryStoryStore";
 
 describe("Add story", () => {
