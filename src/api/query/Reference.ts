@@ -1,4 +1,5 @@
-import { AggregateId, AggregateType } from "../../core/index";
+import { AggregateId } from "../../core/network/aggregate/AggregateId";
+import { AggregateType } from "../../core/network/aggregate/AggregateType";
 
 const aggregateTypeToItemType = (aggregateType: AggregateType) => {
     switch (aggregateType) {

@@ -3,7 +3,7 @@ import { map, uniq } from "fp-ts/lib/Array";
 import { eqString } from "fp-ts/lib/Eq";
 import { map as mapEither } from "fp-ts/lib/Either";
 
-import { AggregateType, Server, AggregateServices, GetAggregatesOfType } from "../../core/index";
+import { Server, GetAggregatesOfType, AggregateType } from "../../core/index";
 
 const serversToEnvironments = (servers: Server[]) =>
     pipe(

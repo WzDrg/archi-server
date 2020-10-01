@@ -1,8 +1,8 @@
-import { createConnection } from "../../core/network/command/Connection";
-import { createContainer } from "../../core/network/command/Container";
-import { createContainerInstance } from "../../core/network/command/ContainerInstance";
-import { createServer } from "../../core/network/command/Server";
-import { createSoftwareSystem } from "../../core/network/command/SoftwareSystem";
+import { createConnection } from "../../core/network/command/ConnectionCommand";
+import { createContainer } from "../../core/network/command/ContainerCommand";
+import { createContainerInstance } from "../../core/network/command/ContainerInstanceCommand";
+import { createServer } from "../../core/network/command/ServerCommand";
+import { createSoftwareSystem } from "../../core/network/command/SoftwareSystemCommand";
 
 export const ss_docgen = createSoftwareSystem("Document Generation", "");
 export const ss_doccapt = createSoftwareSystem("Document Capture", "");

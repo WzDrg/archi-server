@@ -4,7 +4,7 @@ import { isSome, toNullable } from "fp-ts/lib/Option";
 import { pipe } from "fp-ts/lib/pipeable";
 import { NewStory } from "../../core";
 import { Fault } from "../../core/Fault";
-import { memoryStoryStore } from "../MemoryStoryStore";
+import { memoryStoryStore } from "../MemoryStoryStorage";
 
 describe("Get Story", () => {
   it("should retrieve a story", () => {

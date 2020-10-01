@@ -1,7 +1,7 @@
 import { right } from "fp-ts/lib/Either";
 import { v4 as uuidv4 } from "uuid";
 
-import { Story, StoryId, StoryStore, NewStory } from "../core/index";
+import { Story, StoryId, StoryStorage, NewStory } from "../core/index";
 import { fromNullable, none } from "fp-ts/lib/Option";
 
 type StoryCache = Map<StoryId, Story>;
@@ -31,7 +31,7 @@ const getAllStories = (storiesCache: StoryCache) =>
     () =>
         right(Object.values(storiesCache));
 
-export const memoryStoryStore = (stories: NewStory[]): StoryStore => {
+export const memoryStoryStore = (stories: NewStory[]): StoryStorage => {
     const cache = new Map<StoryId, Story>();
     stories.forEach(addStory(cache));
     return {

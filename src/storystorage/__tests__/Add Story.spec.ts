@@ -1,6 +1,6 @@
 import {bimap} from "fp-ts/lib/Either";
 import { NewStory } from "../../core/story/Story";
-import {memoryStoryStore} from "../MemoryStoryStore";
+import {memoryStoryStore} from "../MemoryStoryStorage";
 
 describe("Add story", () => {
     it("should add a new story", () => {

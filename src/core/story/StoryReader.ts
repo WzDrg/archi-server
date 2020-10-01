@@ -4,7 +4,7 @@ import { safeLoad } from 'js-yaml';
 import { readdirSync, readFileSync } from "fs";
 import { join, resolve } from "path";
 
-import { Story } from "../core";
+import { Story } from "..";
 
 const stringToStory = (content: string) =>
     safeLoad(content) as Story;

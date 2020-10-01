@@ -3,7 +3,7 @@ import { pipe } from "fp-ts/lib/function";
 
 import { Story } from "../story/Story";
 import { aggregateServices } from "../AggregateServices";
-import { AggregateType } from "../network/model/Aggregates";
+import { AggregateType } from "../network/aggregate/AggregateType";
 
 const storyStore = {
     addStory: jest.fn(),

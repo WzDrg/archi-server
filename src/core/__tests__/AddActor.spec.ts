@@ -1,12 +1,13 @@
-import { createActor, updateActor, mergeActor } from "../network/command/Actor";
-import { memoryEventStore } from "../network/MemoryEventStore";
-import { appendCommand, appendCommands } from "../network/command/CommandServices";
+import { createActor, updateActor, mergeActor } from "../network/command/ActorCommand";
+import { memoryEventStore } from "../network/event/EventStorage";
+import { executeCommand, appendCommands } from "../network/command/CommandExecution";
 import { getAggregates } from "../AggregateServices";
-import { actorId, AggregateType } from "../network/model/Aggregates";
+import { actorId } from "../network/aggregate/AggregateId";
+import { AggregateType } from "../network/aggregate/AggregateType";
 
 describe("AddActor", () => {
     it("should create a actor", () => {
-        const event_store = appendCommand(memoryEventStore())(createActor("Engage One Designer", "My actor"));
+        const event_store = executeCommand(memoryEventStore())(createActor("Engage One Designer", "My actor"));
         const result = getAggregates(event_store)(AggregateType.Actor);
         expect(result).toHaveLength(1);
         expect(result[0]).toHaveProperty("name", "Engage One Designer");
@@ -37,7 +38,7 @@ describe("AddActor", () => {
     });
 
     it("should merge into a new actor", () => {
-        const event_store = appendCommand(memoryEventStore())(mergeActor("Engage One Designer", "My actor"));
+        const event_store = executeCommand(memoryEventStore())(mergeActor("Engage One Designer", "My actor"));
         const result = getAggregates(event_store)(AggregateType.Actor);
         expect(result).toHaveLength(1);
         expect(result[0]).toHaveProperty("name", "Engage One Designer");

@@ -1,6 +1,6 @@
 import { bimap } from "fp-ts/lib/Either";
 import { NewStory } from "../../core";
-import { memoryStoryStore } from "../MemoryStoryStore";
+import { memoryStoryStore } from "../MemoryStoryStorage";
 
 describe("Get All Stories", () => {
   it("should return an empty list when stories are available", async () => {

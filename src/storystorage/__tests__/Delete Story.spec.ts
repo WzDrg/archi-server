@@ -3,7 +3,7 @@ import { pipe } from "fp-ts/lib/pipeable";
 import { head} from "fp-ts/lib/Array";
 
 import { NewStory } from "../../core";
-import { memoryStoryStore } from "../MemoryStoryStore";
+import { memoryStoryStore } from "../MemoryStoryStorage";
 import { Fault } from "../../core/Fault";
 
 describe("Delete Story", () => {

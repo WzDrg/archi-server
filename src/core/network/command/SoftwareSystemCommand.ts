@@ -1,5 +1,8 @@
-import { AggregateType, AggregateId, Command, SoftwareSystem, softwareSystemId } from "../model/Aggregates";
+import { SoftwareSystem} from "../aggregate/Aggregates";
+import { Command } from "./Command";
+import { AggregateType } from "../aggregate/AggregateType";
 import { isSome, some, Option, isNone, toNullable } from "fp-ts/lib/Option";
+import { AggregateId, softwareSystemId } from "../aggregate/AggregateId";
 
 const applySoftwareSystemCreated = (name: string, description: string) =>
     (state: Option<SoftwareSystem>): Option<SoftwareSystem> =>

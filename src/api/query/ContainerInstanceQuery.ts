@@ -2,7 +2,7 @@ import { pipe } from "fp-ts/lib/pipeable";
 import { filter, map } from "fp-ts/lib/Array";
 import { map as mapEither } from "fp-ts/lib/Either";
 
-import { ContainerInstance, AggregateType, AggregateId, GetAggregatesOfType } from "../../core/index";
+import { ContainerInstance, AggregateId, GetAggregatesOfType, AggregateType } from "../../core/index";
 
 export interface GQLContainerInstance {
     id: string,

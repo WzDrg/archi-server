@@ -1,5 +1,9 @@
 import { Option, isSome, some, isNone } from "fp-ts/lib/Option";
-import { AggregateId, AggregateType, Event, Command, Connection, connectionId } from "../model/Aggregates";
+import { Connection} from "../aggregate/Aggregates";
+import { Command } from "./Command";
+import { Event } from "../event/Event";
+import { AggregateType } from "../aggregate/AggregateType";
+import { AggregateId, connectionId } from "../aggregate/AggregateId";
 
 const applyConnectionCreated = (id: AggregateId<AggregateType.Connection>, sourceId: AggregateId<any>, targetId: AggregateId<any>) =>
     (state: Option<Connection>): Option<Connection> =>

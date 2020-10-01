@@ -2,8 +2,9 @@ import { pipe } from "fp-ts/lib/pipeable";
 import { map as mapEither } from "fp-ts/lib/Either";
 import { map, filter } from "fp-ts/lib/Array";
 
-import { AggregateType, eqAggregateId, SoftwareSystem, softwareSystemId, Connection, GetAggregatesOfType } from "../../core/index";
+import { SoftwareSystem, Connection, GetAggregatesOfType, softwareSystemId, eqAggregateId} from "../../core/index";
 import { aggregateIdToReference } from "./Reference";
+import { AggregateType } from "../../core/network/aggregate/AggregateType";
 
 const convertSoftwareSystem = (softwareSystem: SoftwareSystem) =>
     ({

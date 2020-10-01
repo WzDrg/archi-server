@@ -1,17 +1,19 @@
 import { reduce } from "fp-ts/lib/Array";
 import { pipe } from "fp-ts/lib/pipeable";
 
-import { EventStore } from "../network/EventStore";
-import { appendCommand } from "../network/command/CommandServices";
-import { AggregateType, AggregateId, Command, containerInstanceId, containerId, softwareSystemId } from "../network/model/Aggregates";
-import { mergeConnectionInstance } from "../network/command/ConnectionInstance";
-import { mergeContainerInstance } from "../network/command/ContainerInstance";
-import { mergeConnection } from "../network/command/Connection";
-import { memoryEventStore } from "../network/MemoryEventStore";
+import { EventStore } from "../network/event/EventStorage";
+import { executeCommand } from "../network/command/CommandExecution";
+import { AggregateId, containerInstanceId, containerId, softwareSystemId } from "../network/aggregate/AggregateId";
+import { Command } from "../network/command/Command";
+import { AggregateType } from "../network/aggregate/AggregateType";
+import { mergeConnectionInstance } from "../network/command/ConnectionInstanceCommand";
+import { mergeContainerInstance } from "../network/command/ContainerInstanceCommand";
+import { mergeConnection } from "../network/command/ConnectionCommand";
+import { memoryEventStore } from "../network/event/EventStorage";
 import { Story, StoryContainer, StoryContainerInstance, StoryServer, StorySoftwareSystem, StoryUses, StoryCommunication, StoryEnvironment } from "./Story";
-import { mergeServer } from "../network/command/Server";
-import { mergeContainer } from "../network/command/Container";
-import { mergeSoftwareSystem } from "../network/command/SoftwareSystem";
+import { mergeServer } from "../network/command/ServerCommand";
+import { mergeContainer } from "../network/command/ContainerCommand";
+import { mergeSoftwareSystem } from "../network/command/SoftwareSystemCommand";
 
 const toTargetInstanceId = (id: string, type?: string): AggregateId<any> =>
     ({ id: id, type: type ? AggregateType[type] : AggregateType.ContainerInstance });
@@ -96,7 +98,7 @@ export const appendStoryToEventStore = (events: EventStore) =>
     (story: Story) =>
         pipe(
             fromStory(story),
-            reduce(events, (events, command) => appendCommand(events)(command))
+            reduce(events, (events, command) => executeCommand(events)(command))
         );
 
 export const eventStoreFromStories = (stories: Story[]) =>

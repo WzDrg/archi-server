@@ -1,10 +1,10 @@
 import { pipe } from 'fp-ts/lib/pipeable';
 
 import { startServer, ServerConfiguration } from './api/GraphQLServer';
-import { readStoriesFromFolder } from './storystore/StoryReader';
+import { readStoriesFromFolder } from './core/story/StoryReader';
 import { aggregateServices } from './core/AggregateServices';
 import { storyServices } from './core';
-import { memoryStoryStore } from './storystore/MemoryStoryStore';
+import { memoryStoryStore } from './storystorage/MemoryStoryStorage';
 
 let storyStorage = pipe(
     readStoriesFromFolder("./src/resources"),

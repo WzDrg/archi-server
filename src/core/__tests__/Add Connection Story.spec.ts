@@ -1,7 +1,7 @@
 import { right, fold } from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/pipeable";
 
-import { AggregateType } from "../network/model/Aggregates";
+import { AggregateType } from "../network/aggregate/AggregateType";
 import { aggregateServices } from "../AggregateServices";
 import { Story } from "../story/Story";
 

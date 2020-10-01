@@ -3,13 +3,16 @@ import { reduce, map, filter } from "fp-ts/lib/Array";
 import { pipe } from "fp-ts/lib/pipeable";
 import { toArray } from "fp-ts/lib/Record";
 
-import { Aggregate, AggregateType, AggregateId, Event } from "./network/model/Aggregates";
+import { Aggregate} from "./network/aggregate/Aggregates";
+import { Event } from "./network/event/Event";
+import { AggregateType } from "./network/aggregate/AggregateType";
 import { Story } from "./story/Story";
-import { EventStore } from "./network/EventStore";
-import { StoryStore } from "./proxy/StoryStore";
+import { EventStore } from "./network/event/EventStorage";
+import { StoryStorage } from "./proxy/StoryStorage";
 import { Either, map as mapEither } from "fp-ts/lib/Either";
 import { Fault } from "./Fault";
 import { eventStoreFromStories } from "./story/EventStoreBuilder";
+import { AggregateId } from "./network/aggregate/AggregateId";
 
 export type GetAggregate = <T extends AggregateType>(id: AggregateId<T>) => Option<Aggregate<T>>;
 export type GetAggregates = <T extends AggregateType>(type: T) => Aggregate<T>[];
@@ -87,7 +90,7 @@ export interface AggregateServices {
     getAggregateWithId: GetAggregateWithId;
 }
 
-export const aggregateServices = (storyStore: StoryStore): AggregateServices => ({
+export const aggregateServices = (storyStore: StoryStorage): AggregateServices => ({
     getAggregatesOfType: getAggregatesOfType(storyStore.getAllStories),
     getAggregateWithId: getAggregateWithId(storyStore.getAllStories)
 });

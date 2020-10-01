@@ -1,5 +1,9 @@
-import { AggregateType, AggregateId, Command, Event, Container, containerId } from "../model/Aggregates";
+import { Container} from "../aggregate/Aggregates";
+import { Command } from "./Command";
+import { Event } from "../event/Event";
+import { AggregateType } from "../aggregate/AggregateType";
 import { Option, none, isSome, some, isNone, toNullable } from "fp-ts/lib/Option";
+import { AggregateId, containerId } from "../aggregate/AggregateId";
 
 const applyContainerCreated = (name: string, description: string, software_system: AggregateId<AggregateType.SoftwareSystem>) =>
     (state: Option<Container>): Option<Container> => {

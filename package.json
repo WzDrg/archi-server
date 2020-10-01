@@ -7,7 +7,7 @@
 			"scripts": {
 						"test": "tsc -p . && npx jest --runInBand --no-cache",
 						"start": "node 'dist/index.js'",
-						"build": "tsc -p . && ncp src/schema dist/schema",
+						"build": "tsc -p .",
 						"start:dev": "npm run build:dev",
 						"build:dev": "nodemon 'src/index.ts' --exec 'ts-node' src/index.ts -e ts,graphql"
 			},

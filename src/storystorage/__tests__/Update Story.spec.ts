@@ -4,7 +4,7 @@ import { pipe } from "fp-ts/lib/function";
 import { isSome, toNullable } from "fp-ts/lib/Option";
 import { NewStory } from "../../core";
 import { Fault } from "../../core/Fault";
-import { memoryStoryStore } from "../MemoryStoryStore";
+import { memoryStoryStore } from "../MemoryStoryStorage";
 
 describe("Update Story", () => {
   it("should return updated story", () => {
