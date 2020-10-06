@@ -1,8 +1,10 @@
-import { right } from "fp-ts/lib/Either";
+import { map, right } from "fp-ts/lib/Either";
 import { v4 as uuidv4 } from "uuid";
 
-import { Story, StoryId, StoryStorage, NewStory } from "../core/index";
+import { Story, StoryId, StoryStorage, NewStory, StorySelection } from "../core/index";
 import { fromNullable, none } from "fp-ts/lib/Option";
+import { pipe } from "fp-ts/lib/function";
+import { filter } from "fp-ts/lib/Array";
 
 type StoryCache = Map<StoryId, Story>;
 
@@ -31,6 +33,17 @@ const getAllStories = (storiesCache: StoryCache) =>
     () =>
         right(Object.values(storiesCache));
 
+const filterStory = (selection: StorySelection) =>
+    (story: Story) =>
+        story.date <= selection.until;
+
+const getStories = (storiesCache: StoryCache) =>
+    (selection: StorySelection) =>
+        pipe(
+            right(Object.values(storiesCache)),
+            map(filter(filterStory(selection)))
+        );
+
 export const memoryStoryStore = (stories: NewStory[]): StoryStorage => {
     const cache = new Map<StoryId, Story>();
     stories.forEach(addStory(cache));
@@ -39,6 +52,7 @@ export const memoryStoryStore = (stories: NewStory[]): StoryStorage => {
         updateStory: updateStory(cache),
         deleteStory: deleteStory(cache),
         getStory: getStory(cache),
-        getAllStories: getAllStories(cache)
+        getAllStories: getAllStories(cache),
+        getStories: getStories(cache)
     };
 };

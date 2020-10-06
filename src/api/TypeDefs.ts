@@ -1,6 +1,8 @@
 import gql from 'graphql-tag';
 
 export default gql`
+scalar Date
+
 enum ItemType {
     ACTOR
     SOFTWARESYSTEM
@@ -16,8 +18,8 @@ type Reference {
 }
 
 type Query {
-    softwareSystems: [SoftwareSystem]
-    environments: [Environment]
+    softwareSystems(until:Date): [SoftwareSystem]
+    environments(until:Date): [Environment]
     stories: [Story]
 }
 

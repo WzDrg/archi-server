@@ -2,6 +2,7 @@ import express from "express";
 import { ApolloServer, ApolloError } from "apollo-server-express";
 import { getOrElse } from "fp-ts/lib/Either";
 import cors from "cors";
+import { GraphQLDateTime } from "graphql-iso-date";
 
 import typeDefs from "./TypeDefs";
 import { getSoftwareSystems, getSoftwareSystemUses } from "./query/SoftwareSystemQuery";
@@ -10,7 +11,7 @@ import { getEnvironments } from "./query/EnvironmentQuery";
 import { serversOfEnvironment } from "./query/ServerQuery";
 import { getContainerInstancesOfServer } from "./query/ContainerInstanceQuery";
 import { queryAllStories } from "./query/StoryQuery";
-import { containerId, containerInstanceId, softwareSystemId, AggregateServices, StoryServices, serverId } from "../core/index";
+import { containerId, containerInstanceId, softwareSystemId, AggregateServices, StoryServices, serverId, StorySelection } from "../core/index";
 import { Fault } from "../core/Fault";
 
 export interface ServerConfiguration {
@@ -26,26 +27,27 @@ export const createApolloServer = (config: ServerConfiguration) => {
     return new ApolloServer({
         typeDefs: typeDefs,
         resolvers: {
+            Date: GraphQLDateTime,
             Query: {
-                softwareSystems: (_, __, ctx) => handleFault(getSoftwareSystems(ctx.getAggregatesOfType)()),
-                environments: (_, __, ctx) => handleFault(getEnvironments(ctx.getAggregatesOfType)()),
+                softwareSystems: (_, args, ctx) => handleFault(getSoftwareSystems(ctx.getAggregatesOfType)(args)()),
+                environments: (_, args, ctx) => handleFault(getEnvironments(ctx.getAggregatesOfType)(args)()),
                 stories: (_, __, ctx) => handleFault(queryAllStories(ctx.getAllStories)())
             },
             SoftwareSystem: {
-                containers: (parent, _, ctx) => handleFault(getContainersOfSoftwareSystem(ctx.getAggregatesOfType)(softwareSystemId(parent.id))),
-                uses: (parent, _, ctx) => handleFault(getSoftwareSystemUses(ctx.getAggregatesOfType)(parent.id))
+                containers: (parent, args, ctx) => handleFault(getContainersOfSoftwareSystem(ctx.getAggregatesOfType)(args)(softwareSystemId(parent.id))),
+                uses: (parent, args, ctx) => handleFault(getSoftwareSystemUses(ctx.getAggregatesOfType)(args)(parent.id))
             },
             Container: {
-                uses: (parent, _, ctx) => handleFault(getUsesOfContainer(ctx.getAggregatesOfType)(containerId(parent.id)))
+                uses: (parent, args, ctx) => handleFault(getUsesOfContainer(ctx.getAggregatesOfType)(args)(containerId(parent.id)))
             },
             Environment: {
-                servers: (parent, _, ctx) => handleFault(serversOfEnvironment(ctx.getAggregatesOfType)(parent.name))
+                servers: (parent, args, ctx) => handleFault(serversOfEnvironment(ctx.getAggregatesOfType)(args)(parent.name))
             },
             Server: {
-                containers: (parent, _, ctx) => handleFault(getContainerInstancesOfServer(ctx.getAggregatesOfType)(serverId(parent.id)))
+                containers: (parent, args, ctx) => handleFault(getContainerInstancesOfServer(ctx.getAggregatesOfType)(args)(serverId(parent.id)))
             },
             ContainerInstance: {
-                container: (parent, _, ctx) => handleFault(getContainerOfContainerInstance(ctx.getAggregateWithId)(containerInstanceId(parent.id)))
+                container: (parent, args, ctx) => handleFault(getContainerOfContainerInstance(ctx.getAggregateWithId)(args)(containerInstanceId(parent.id)))
             }
         },
         context: {

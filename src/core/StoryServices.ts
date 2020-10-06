@@ -1,12 +1,12 @@
 import { Either } from "fp-ts/lib/Either";
 
 import { StoryStorage } from "./proxy/StoryStorage";
-import { Story } from "./story/Story";
+import { NewStory, Story } from "./story/Story";
 import { Fault } from "./Fault";
 
 
 export type GetAllStories = () => Either<Fault, Story[]>;
-export type AddStory = (story: Story) => Either<Fault, Story>;
+export type AddStory = (story: NewStory) => Either<Fault, Story>;
 export interface StoryServices {
     getAllStories: GetAllStories;
     addStory: AddStory;

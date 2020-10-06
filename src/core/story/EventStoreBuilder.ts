@@ -19,65 +19,65 @@ const toTargetInstanceId = (id: string, type?: string): AggregateId<any> =>
     ({ id: id, type: type ? AggregateType[type] : AggregateType.ContainerInstance });
 
 
-const fromContainerinstanceUses = (container_instance_name: string, name: string, communication: StoryCommunication): Command<any>[] =>
-    [mergeConnectionInstance(name, containerInstanceId(container_instance_name), toTargetInstanceId(name, communication.type))];
+const fromContainerinstanceUses = (date: Date, container_instance_name: string, name: string, communication: StoryCommunication): Command<any>[] =>
+    [mergeConnectionInstance(name, date, containerInstanceId(container_instance_name), toTargetInstanceId(name, communication.type))];
 
 
-const fromContainerInstance = (server_name: string, name: string, container: StoryContainerInstance): Command<any>[] =>
+const fromContainerInstance = (date: Date, server_name: string, name: string, container: StoryContainerInstance): Command<any>[] =>
     [container.container
-        ? mergeContainerInstance(`${server_name}_${name}`, server_name, containerId(container.container))
-        : mergeContainerInstance(`${server_name}_${name}`, server_name),
+        ? mergeContainerInstance(`${server_name}_${name}`, date, server_name, containerId(container.container))
+        : mergeContainerInstance(`${server_name}_${name}`, date, server_name),
     ...container.uses
         ? reduce([], (commands: Command<any>[], uses_name: string) =>
-            commands.concat(fromContainerinstanceUses(`${server_name}_${name}`, uses_name, container.uses[uses_name])))
+            commands.concat(fromContainerinstanceUses(date, `${server_name}_${name}`, uses_name, container.uses[uses_name])))
             (Object.keys(container.uses))
         : []];
 
 
-const fromServer = (environment: string, name: string, server: StoryServer): Command<any>[] =>
-    [mergeServer(name, server.description, environment, server.os, server.tier, server.datacenter, server.cpu, server.memory),
+const fromServer = (date: Date, environment: string, name: string, server: StoryServer): Command<any>[] =>
+    [mergeServer(date, name, server.description, environment, server.os, server.tier, server.datacenter, server.cpu, server.memory),
     ...server.containers
         ? reduce([], (commands: Command<any>[], container_name: string) =>
-            commands.concat(fromContainerInstance(name, container_name, server.containers[container_name])))
+            commands.concat(fromContainerInstance(date, name, container_name, server.containers[container_name])))
             (Object.keys(server.containers))
         : []];
 
 
-const fromEnvironment = (name: string, environment: StoryEnvironment): Command<any>[] =>
+const fromEnvironment = (date: Date, name: string, environment: StoryEnvironment): Command<any>[] =>
     environment.servers
         ? reduce([], (commands: Command<any>[], server_name: string) =>
-            commands.concat(fromServer(name, server_name, environment.servers[server_name])))
+            commands.concat(fromServer(date, name, server_name, environment.servers[server_name])))
             (Object.keys(environment.servers))
         : [];
 
 
-const fromContainerUses = (container_name: string, name: string, uses: StoryUses) =>
-    [mergeConnection(`${container_name}_${name}`, containerId(container_name), { id: name, type: AggregateType[uses.type ?? "container"] })];
+const fromContainerUses = (date: Date, container_name: string, name: string, uses: StoryUses) =>
+    [mergeConnection(`${container_name}_${name}`, date, containerId(container_name), { id: name, type: AggregateType[uses.type ?? "container"] })];
 
 
-const fromContainer = (software_system_name: string, name: string, container: StoryContainer): Command<any>[] =>
-    [mergeContainer(name, container.description, softwareSystemId(software_system_name)),
+const fromContainer = (date: Date, software_system_name: string, name: string, container: StoryContainer): Command<any>[] =>
+    [mergeContainer(date, name, container.description, softwareSystemId(software_system_name)),
     ...container.uses
         ? reduce([], (commands: Command<any>[], uses_name: string) =>
-            commands.concat(fromContainerUses(name, uses_name, container.uses[uses_name])))
+            commands.concat(fromContainerUses(date, name, uses_name, container.uses[uses_name])))
             (Object.keys(container.uses))
         : []];
 
 
-const fromSoftwareSystemUses = (software_system_name: string, name: string, uses: StoryUses) =>
-    [mergeConnection(`${software_system_name}_${name}`, softwareSystemId(software_system_name), { id: name, type: AggregateType[uses.type ?? "container"] })];
+const fromSoftwareSystemUses = (date: Date, software_system_name: string, name: string, uses: StoryUses) =>
+    [mergeConnection(`${software_system_name}_${name}`, date, softwareSystemId(software_system_name), { id: name, type: AggregateType[uses.type ?? "container"] })];
 
 
-const fromSoftwareSystem = (name: string, softwareSystem: StorySoftwareSystem): Command<any>[] =>
-    [mergeSoftwareSystem(name, softwareSystem.description ?? ""),
+const fromSoftwareSystem = (date: Date, name: string, softwareSystem: StorySoftwareSystem): Command<any>[] =>
+    [mergeSoftwareSystem(date, name, softwareSystem.description ?? ""),
     ...softwareSystem.containers
         ? reduce([], (commands: Command<any>[], container_name: string) =>
-            commands.concat(fromContainer(name, container_name, softwareSystem.containers[container_name])))
+            commands.concat(fromContainer(date, name, container_name, softwareSystem.containers[container_name])))
             (Object.keys(softwareSystem.containers))
         : [],
     ...softwareSystem.uses
         ? reduce([], (commands: Command<any>[], uses_name: string) =>
-            commands.concat(fromSoftwareSystemUses(name, uses_name, softwareSystem.uses[uses_name])))
+            commands.concat(fromSoftwareSystemUses(date, name, uses_name, softwareSystem.uses[uses_name])))
             (Object.keys(softwareSystem.uses))
         : []];
 
@@ -85,12 +85,12 @@ const fromSoftwareSystem = (name: string, softwareSystem: StorySoftwareSystem): 
 const fromStory = (story: Story): Command<any>[] =>
     [...story.environments
         ? reduce([], (commands: Command<any>[], env: string) =>
-            commands.concat(fromEnvironment(env, story.environments[env])))
+            commands.concat(fromEnvironment(story.date, env, story.environments[env])))
             (Object.keys(story.environments))
         : [],
     ...story.softwareSystems
         ? reduce([], (commands: Command<any>[], name: string) =>
-            commands.concat(fromSoftwareSystem(name, story.softwareSystems[name])))
+            commands.concat(fromSoftwareSystem(story.date, name, story.softwareSystems[name])))
             (Object.keys(story.softwareSystems))
         : []];
 

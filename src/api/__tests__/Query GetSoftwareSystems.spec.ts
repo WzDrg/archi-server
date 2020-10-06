@@ -5,12 +5,15 @@ import { createApolloServer } from "../GraphQLServer";
 import { right } from "fp-ts/lib/Either";
 import { SoftwareSystem, softwareSystemId, Container, containerId } from "../../core";
 
+
+const getAggregatesOfType = jest.fn();
+const getAggregateWithId = jest.fn();
 const serverConfig = {
     playground: false,
     introspection: false,
     aggregateServices: {
-        getAggregatesOfType: jest.fn(),
-        getAggregateWithId: jest.fn()
+        getAggregatesOfType: (selection) => getAggregatesOfType,
+        getAggregateWithId: (selection) => getAggregateWithId
     },
     storyServices: {
         addStory: jest.fn(),
@@ -20,9 +23,9 @@ const serverConfig = {
 
 describe("softwareSystems query", () => {
     it("should return an empty list when no software systems are defined", async () => {
-        serverConfig.aggregateServices.getAggregatesOfType.mockReturnValueOnce(right([]));
+        getAggregatesOfType.mockReturnValueOnce(right([]));
         const client = createTestClient(createApolloServer(serverConfig));
-        const response = await client.query({ query: gql`query {softwareSystems {name}}` });
+        const response = await client.query({ query: gql`query {softwareSystems {name}}`, variables: { until: new Date() } });
         expect(response.errors).toBeUndefined();
         expect(response.data.softwareSystems).toHaveLength(0);
     });
@@ -30,12 +33,14 @@ describe("softwareSystems query", () => {
     it("should return a single software system", async () => {
         const softwareSystem: SoftwareSystem = {
             id: softwareSystemId("ss"),
+            createdOn: new Date(),
+            updatedOn: new Date(),
             name: "Document Generation",
             description: "Document Generation"
         };
-        serverConfig.aggregateServices.getAggregatesOfType.mockReturnValueOnce(right([softwareSystem]));
+        getAggregatesOfType.mockReturnValueOnce(right([softwareSystem]));
         const client = createTestClient(createApolloServer(serverConfig));
-        const response = await client.query({ query: gql`query {softwareSystems {name}}` });
+        const response = await client.query({ query: gql`query {softwareSystems {name}}`, variables: { until: new Date() } });
         expect(response.errors).toBeUndefined();
         expect(response.data.softwareSystems).toHaveLength(1);
         expect(response.data.softwareSystems[0]).toHaveProperty("name", softwareSystem.name);
@@ -44,17 +49,21 @@ describe("softwareSystems query", () => {
     it("should return multiple software systems", async () => {
         const softwareSystem: SoftwareSystem = {
             id: softwareSystemId("ss1"),
+            createdOn: new Date(),
+            updatedOn: new Date(),
             name: "Document Generation",
             description: "Document Generation"
         };
         const softwareSystem2: SoftwareSystem = {
             id: softwareSystemId("ss2"),
+            createdOn: new Date(),
+            updatedOn: new Date(),
             name: "Document Generation2",
             description: "Document Generation2"
         };
-        serverConfig.aggregateServices.getAggregatesOfType.mockReturnValueOnce(right([softwareSystem, softwareSystem2]));
+        getAggregatesOfType.mockReturnValueOnce(right([softwareSystem, softwareSystem2]));
         const client = createTestClient(createApolloServer(serverConfig));
-        const response = await client.query({ query: gql`query {softwareSystems {name}}` });
+        const response = await client.query({ query: gql`query {softwareSystems {name}}`, variables: { until: new Date() } });
         expect(response.errors).toBeUndefined();
         expect(response.data.softwareSystems).toHaveLength(2);
     });
@@ -62,13 +71,15 @@ describe("softwareSystems query", () => {
     it("should return a software system without containers", async () => {
         const softwareSystem: SoftwareSystem = {
             id: softwareSystemId("ss1"),
+            createdOn: new Date(),
+            updatedOn: new Date(),
             name: "Document Generation",
             description: "Document Generation"
         };
-        serverConfig.aggregateServices.getAggregatesOfType.mockReturnValueOnce(right([softwareSystem]));
-        serverConfig.aggregateServices.getAggregatesOfType.mockReturnValueOnce(right([]));
+        getAggregatesOfType.mockReturnValueOnce(right([softwareSystem]));
+        getAggregatesOfType.mockReturnValueOnce(right([]));
         const client = createTestClient(createApolloServer(serverConfig));
-        const response = await client.query({ query: gql`query {softwareSystems {name containers {name}}}` });
+        const response = await client.query({ query: gql`query {softwareSystems {name containers {name}}}`, variables: { until: new Date() } });
         expect(response.errors).toBeUndefined();
         expect(response.data.softwareSystems).toHaveLength(1);
         expect(response.data.softwareSystems[0]).toHaveProperty("containers");
@@ -78,19 +89,23 @@ describe("softwareSystems query", () => {
     it("should return a software system with a single container", async () => {
         const softwareSystem: SoftwareSystem = {
             id: softwareSystemId("ss1"),
+            createdOn: new Date(),
+            updatedOn: new Date(),
             name: "Document Generation",
             description: "Document Generation"
         };
         const container: Container = {
             id: containerId("con1"),
+            createdOn: new Date(),
+            updatedOn: new Date(),
             name: "Container",
             description: "Container",
             software_system: softwareSystem.id
         }
-        serverConfig.aggregateServices.getAggregatesOfType.mockReturnValueOnce(right([softwareSystem]));
-        serverConfig.aggregateServices.getAggregatesOfType.mockReturnValueOnce(right([container]));
+        getAggregatesOfType.mockReturnValueOnce(right([softwareSystem]));
+        getAggregatesOfType.mockReturnValueOnce(right([container]));
         const client = createTestClient(createApolloServer(serverConfig));
-        const response = await client.query({ query: gql`query {softwareSystems {name containers {name}}}` });
+        const response = await client.query({ query: gql`query {softwareSystems {name containers {name}}}`, variables: { until: new Date() } });
         expect(response.errors).toBeUndefined();
         expect(response.data.softwareSystems).toHaveLength(1);
         expect(response.data.softwareSystems[0]).toHaveProperty("containers");
@@ -101,25 +116,31 @@ describe("softwareSystems query", () => {
     it("should return a software system with multiple containers", async () => {
         const softwareSystem: SoftwareSystem = {
             id: softwareSystemId("ss1"),
+            createdOn: new Date(),
+            updatedOn: new Date(),
             name: "Document Generation",
             description: "Document Generation"
         };
         const container: Container = {
             id: containerId("con1"),
+            createdOn: new Date(),
+            updatedOn: new Date(),
             name: "Container",
             description: "Container",
             software_system: softwareSystem.id
         }
         const container2: Container = {
             id: containerId("con2"),
+            createdOn: new Date(),
+            updatedOn: new Date(),
             name: "Container2",
             description: "Container2",
             software_system: softwareSystem.id
         }
-        serverConfig.aggregateServices.getAggregatesOfType.mockReturnValueOnce(right([softwareSystem]));
-        serverConfig.aggregateServices.getAggregatesOfType.mockReturnValueOnce(right([container, container2]));
+        getAggregatesOfType.mockReturnValueOnce(right([softwareSystem]));
+        getAggregatesOfType.mockReturnValueOnce(right([container, container2]));
         const client = createTestClient(createApolloServer(serverConfig));
-        const response = await client.query({ query: gql`query {softwareSystems {name containers {name}}}` });
+        const response = await client.query({ query: gql`query {softwareSystems {name containers {name}}}`, variables: { until: new Date() } });
         expect(response.errors).toBeUndefined();
         expect(response.data.softwareSystems).toHaveLength(1);
         expect(response.data.softwareSystems[0]).toHaveProperty("containers");

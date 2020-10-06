@@ -14,10 +14,17 @@ export type GetStoryFromStorage = (storyId: StoryId) => Either<Fault, Option<Sto
 
 export type GetAllStoriesFromStorage = () => Either<Fault, Story[]>;
 
+export type GetStoriesFromStorage = (selection: StorySelection) => Either<Fault, Story[]>;
+
+export interface StorySelection {
+    until: Date;
+}
+
 export interface StoryStorage {
     addStory: AddStoryToStorage;
     updateStory: UpdateStoryFromStorage;
     deleteStory: DeleteStoryFromStorage;
     getStory: GetStoryFromStorage;
     getAllStories: GetAllStoriesFromStorage;
+    getStories: GetStoriesFromStorage;
 }

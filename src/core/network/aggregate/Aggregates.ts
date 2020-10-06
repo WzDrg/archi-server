@@ -3,6 +3,8 @@ import { AggregateType } from "./AggregateType";
 
 export interface Aggregate<T extends AggregateType> {
   id: AggregateId<T>;
+  createdOn: Date;
+  updatedOn: Date;
 }
 
 export interface Actor extends Aggregate<AggregateType.Actor> {

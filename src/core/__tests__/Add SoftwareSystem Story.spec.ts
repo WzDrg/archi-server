@@ -10,7 +10,8 @@ const storyStore = {
     updateStory: jest.fn(),
     deleteStory: jest.fn(),
     getStory: jest.fn(),
-    getAllStories: jest.fn()
+    getAllStories: jest.fn(),
+    getStories: jest.fn()
 }
 
 describe("createSoftwareSystem", () => {
@@ -19,7 +20,7 @@ describe("createSoftwareSystem", () => {
             id: "1",
             name: "New software system",
             description: "Description",
-            date: new Date(),
+            date: new Date(2019, 7, 5),
             context: "Tests",
             softwareSystems: {
                 "softwareSystem": {
@@ -28,15 +29,16 @@ describe("createSoftwareSystem", () => {
                 }
             }
         }
-        storyStore.getAllStories.mockReturnValueOnce(right([story]));
+        storyStore.getStories.mockReturnValueOnce(right([story]));
         pipe(
-            aggregateServices(storyStore).getAggregatesOfType(AggregateType.SoftwareSystem),
+            aggregateServices(storyStore).getAggregatesOfType({until: new Date()})(AggregateType.SoftwareSystem),
             fold(
                 () => fail("should not have fault"),
                 softwareSystems => {
                     expect(softwareSystems).toHaveLength(1);
                     expect(softwareSystems[0]).toHaveProperty("name", "softwareSystem");
                     expect(softwareSystems[0]).toHaveProperty("description", story.softwareSystems.softwareSystem.description);
+                    expect(softwareSystems[0]).toHaveProperty("createdOn", story.date);
                 }));
     });
 
@@ -58,9 +60,9 @@ describe("createSoftwareSystem", () => {
                 }
             }
         }
-        storyStore.getAllStories.mockReturnValueOnce(right([story]));
+        storyStore.getStories.mockReturnValueOnce(right([story]));
         pipe(
-            aggregateServices(storyStore).getAggregatesOfType(AggregateType.SoftwareSystem),
+            aggregateServices(storyStore).getAggregatesOfType({until:new Date()})(AggregateType.SoftwareSystem),
             fold(
                 () => fail("should not have fault"),
                 softwareSystems => {
@@ -73,7 +75,7 @@ describe("createSoftwareSystem", () => {
             id: "1",
             name: "New software system",
             description: "Description",
-            date: new Date(),
+            date: new Date(2019,7,10),
             context: "Tests",
             softwareSystems: {
                 "softwareSystem1": {
@@ -86,7 +88,7 @@ describe("createSoftwareSystem", () => {
             id: "2",
             name: "New software system",
             description: "Description",
-            date: new Date(),
+            date: new Date(2019,7,11),
             context: "Tests",
             softwareSystems: {
                 "softwareSystem2": {
@@ -95,9 +97,9 @@ describe("createSoftwareSystem", () => {
                 }
             }
         }
-        storyStore.getAllStories.mockReturnValueOnce(right([story, story2]));
+        storyStore.getStories.mockReturnValueOnce(right([story, story2]));
         pipe(
-            aggregateServices(storyStore).getAggregatesOfType(AggregateType.SoftwareSystem),
+            aggregateServices(storyStore).getAggregatesOfType({ until: new Date() })(AggregateType.SoftwareSystem),
             fold(
                 () => fail("should not have fault"),
                 softwareSystems => {
@@ -110,7 +112,7 @@ describe("createSoftwareSystem", () => {
             id: "1",
             name: "New software system",
             description: "Description",
-            date: new Date(),
+            date: new Date(2019,7,10),
             context: "Tests",
             softwareSystems: {
                 "softwareSystem1": {
@@ -123,7 +125,7 @@ describe("createSoftwareSystem", () => {
             id: "2",
             name: "New software system",
             description: "Description",
-            date: new Date(),
+            date: new Date(2019,7,11),
             context: "Tests",
             softwareSystems: {
                 "softwareSystem1": {
@@ -132,14 +134,16 @@ describe("createSoftwareSystem", () => {
                 }
             }
         }
-        storyStore.getAllStories.mockReturnValueOnce(right([story, story2]));
+        storyStore.getStories.mockReturnValueOnce(right([story, story2]));
         pipe(
-            aggregateServices(storyStore).getAggregatesOfType(AggregateType.SoftwareSystem),
+            aggregateServices(storyStore).getAggregatesOfType({ until: new Date() })(AggregateType.SoftwareSystem),
             fold(
                 () => fail("should not have fault"),
                 softwareSystems => {
                     expect(softwareSystems).toHaveLength(1);
                     expect(softwareSystems[0]).toHaveProperty("description", story2.softwareSystems.softwareSystem1.description);
+                    expect(softwareSystems[0]).toHaveProperty("createdOn", story.date);
+                    expect(softwareSystems[0]).toHaveProperty("updatedOn", story2.date);
                 }));
     });
 });

@@ -11,7 +11,8 @@ const storyStore = {
     updateStory: jest.fn(),
     deleteStory: jest.fn(),
     getStory: jest.fn(),
-    getAllStories: jest.fn()
+    getAllStories: jest.fn(),
+    getStories: jest.fn()
 }
 
 describe("Add Server Story", () => {
@@ -31,9 +32,9 @@ describe("Add Server Story", () => {
                 }
             }
         }
-        storyStore.getAllStories.mockReturnValueOnce(right([story]));
+        storyStore.getStories.mockReturnValueOnce(right([story]));
         pipe(
-            aggregateServices(storyStore).getAggregatesOfType(AggregateType.Server),
+            aggregateServices(storyStore).getAggregatesOfType({ until: new Date() })(AggregateType.Server),
             fold(
                 () => fail("should not have fault"),
                 servers => {
@@ -58,9 +59,9 @@ describe("Add Server Story", () => {
                 }
             }
         }
-        storyStore.getAllStories.mockReturnValueOnce(right([story]));
+        storyStore.getStories.mockReturnValue(right([story]));
         pipe(
-            aggregateServices(storyStore).getAggregatesOfType(AggregateType.Server),
+            aggregateServices(storyStore).getAggregatesOfType({ until: new Date() })(AggregateType.Server),
             fold(
                 () => fail("should not have fault"),
                 servers => {

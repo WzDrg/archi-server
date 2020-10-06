@@ -7,6 +7,7 @@ import { Aggregate} from "../aggregate/Aggregates";
 
 export interface Event<S extends AggregateType> {
   id: AggregateId<S>;
+  date: Date;
   apply: ApplyEvent<S>;
   [s: string]: any;
 }

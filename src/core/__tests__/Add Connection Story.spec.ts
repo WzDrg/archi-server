@@ -11,7 +11,8 @@ const storyStore = {
     updateStory: jest.fn(),
     deleteStory: jest.fn(),
     getStory: jest.fn(),
-    getAllStories: jest.fn()
+    getAllStories: jest.fn(),
+    getStories: jest.fn()
 }
 
 describe("Connection", () => {
@@ -43,9 +44,9 @@ describe("Connection", () => {
                 }
             }
         }
-        storyStore.getAllStories.mockReturnValueOnce(right([story]));
+        storyStore.getStories.mockReturnValueOnce(right([story]));
         pipe(
-            aggregateServices(storyStore).getAggregatesOfType(AggregateType.Connection),
+            aggregateServices(storyStore).getAggregatesOfType({ until: new Date() })(AggregateType.Connection),
             fold(
                 () => fail("should not have fault"),
                 connections => {

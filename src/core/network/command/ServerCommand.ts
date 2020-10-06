@@ -5,11 +5,13 @@ import { ApplyEvent, Event } from "../event/Event";
 import { AggregateType } from "../aggregate/AggregateType";
 import { serverId } from "../aggregate/AggregateId";
 
-const applyServerCreated = (name: string, description: string, segment?: string, operating_system?: string, tier?: number, datacenter?: string, cpu?: number, memory?: string): ApplyEvent<AggregateType.Server> =>
+const applyServerCreated = (date: Date, name: string, description: string, segment?: string, operating_system?: string, tier?: number, datacenter?: string, cpu?: number, memory?: string): ApplyEvent<AggregateType.Server> =>
   (server: Option<Server>): Option<Server> =>
     isNone(server)
       ? some({
         id: serverId(name),
+        createdOn: date,
+        updatedOn: date,
         name: name,
         description: description,
         segment: segment,
@@ -21,13 +23,14 @@ const applyServerCreated = (name: string, description: string, segment?: string,
       })
       : server;
 
-export const createServer = (name: string, description: string, segment?: string, operating_system?: string, tier?: number, datacenter?: string, cpu?: number, memory?: string): Command<AggregateType.Server> =>
+export const createServer = (date: Date, name: string, description: string, segment?: string, operating_system?: string, tier?: number, datacenter?: string, cpu?: number, memory?: string): Command<AggregateType.Server> =>
   Object.assign(
     (server: Option<Server>) => {
       return (isSome(server))
         ? []
         : [{
           id: serverId(name),
+          date: date,
           name: name,
           description: description,
           segment: segment,
@@ -36,14 +39,16 @@ export const createServer = (name: string, description: string, segment?: string
           datacenter: datacenter,
           cpu: cpu,
           memory: memory,
-          apply: applyServerCreated(name, description, segment, operating_system, tier, datacenter, cpu, memory)
+          apply: applyServerCreated(date, name, description, segment, operating_system, tier, datacenter, cpu, memory)
         }];
     }, { id: serverId(name) });
 
-const applyServerUpdated = (name: string, description: string, segment?: string, operating_system?: string, tier?: number, datacenter?: string, cpu?: number, memory?: string): ApplyEvent<AggregateType.Server> =>
+const applyServerUpdated = (date: Date, name: string, description: string, segment?: string, operating_system?: string, tier?: number, datacenter?: string, cpu?: number, memory?: string): ApplyEvent<AggregateType.Server> =>
   (server: Option<Server>): Option<Server> => {
     return isNone(server) ? none : some({
       id: serverId(name),
+      createdOn: toNullable(server).createdOn,
+      updatedOn: date,
       name: name,
       description: description,
       segment: segment,
@@ -55,13 +60,14 @@ const applyServerUpdated = (name: string, description: string, segment?: string,
     });
   }
 
-export const updateServer = (name: string, description: string, segment?: string, operating_system?: string, tier?: number, datacenter?: string, cpu?: number, memory?: string): Command<AggregateType.Server> =>
+export const updateServer = (date: Date, name: string, description: string, segment?: string, operating_system?: string, tier?: number, datacenter?: string, cpu?: number, memory?: string): Command<AggregateType.Server> =>
   Object.assign(
     (server: Option<Server>): Event<AggregateType.Server>[] => {
       return isNone(server)
         ? []
         : [{
           id: serverId(name),
+          date: date,
           name: name,
           description: description,
           segment: segment,
@@ -70,16 +76,17 @@ export const updateServer = (name: string, description: string, segment?: string
           datacenter: datacenter,
           cpu: cpu,
           memory: memory,
-          apply: applyServerUpdated(name, description, segment, operating_system, tier, datacenter, cpu, memory)
+          apply: applyServerUpdated(date, name, description, segment, operating_system, tier, datacenter, cpu, memory)
         }]
     }, { id: serverId(name) });
 
 // Command to merge a server configuration
-export const mergeServer = (name: string, description?: string, segment?: string, operating_system?: string, tier?: number, datacenter?: string, cpu?: number, memory?: string): Command<AggregateType.Server> =>
+export const mergeServer = (date: Date, name: string, description?: string, segment?: string, operating_system?: string, tier?: number, datacenter?: string, cpu?: number, memory?: string): Command<AggregateType.Server> =>
   Object.assign((server: Option<Server>): Event<AggregateType.Server>[] => {
     return isNone(server)
-      ? createServer(name, description ?? "", segment, operating_system, tier, datacenter, cpu, memory)(server)
+      ? createServer(date, name, description ?? "", segment, operating_system, tier, datacenter, cpu, memory)(server)
       : updateServer(
+        date,
         name,
         description ?? toNullable(server).description,
         segment ?? toNullable(server).segment,

@@ -11,7 +11,8 @@ const storyStore = {
     updateStory: jest.fn(),
     deleteStory: jest.fn(),
     getStory: jest.fn(),
-    getAllStories: jest.fn()
+    getAllStories: jest.fn(),
+    getStories:jest.fn()
 }
 
 describe("createSoftwareSystem", () => {
@@ -29,10 +30,10 @@ describe("createSoftwareSystem", () => {
                 }
             }
         }
-        storyStore.getAllStories.mockReturnValue(right([story]));
+        storyStore.getStories.mockReturnValue(right([story]));
         pipe(
-            aggregateServices(storyStore).getAggregatesOfType(AggregateType.SoftwareSystem),
-            chain(softwareSystems => aggregateServices(storyStore).getAggregateWithId(softwareSystems[0].id)),
+            aggregateServices(storyStore).getAggregatesOfType({ until: new Date() })(AggregateType.SoftwareSystem),
+            chain(softwareSystems => aggregateServices(storyStore).getAggregateWithId({until: new Date()})(softwareSystems[0].id)),
             fold(
                 () => fail("should not have fault"),
                 softwareSystem => {
